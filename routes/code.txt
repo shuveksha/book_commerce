@@ -1,0 +1,72 @@
+
+
+
+
+
+// Genre
+
+
+
+// inserting into language
+
+
+app.get('/language', function (req, res) {
+    let sql = "select * from language";
+    con.query(sql, (err, result) => {
+        if (err) 
+            throw err;
+        
+
+        res.send(result);
+    })
+
+
+});
+
+
+
+
+
+
+
+
+
+// language
+
+
+app.get('/languages', function (req, res) {
+    let sql = "select * from language";
+    con.query(sql, (err, result) => {
+        if (err) 
+            throw err;
+        
+
+        res.send(result);
+    })
+
+
+});
+
+
+// author
+
+
+
+
+
+// inserting  into publisher
+
+
+
+
+// inserting into genre
+
+
+
+
+
+
+
+// inserting into language
+
+
