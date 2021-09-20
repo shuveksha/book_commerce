@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "nodemon": "nodemon"
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -18,11 +18,18 @@
   },
   "homepage": "https://github.com/shuveksha/book_commerce#readme",
   "dependencies": {
+    "@splidejs/splide": "^2.4.21",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
+    "express-handlebars": "^5.3.3",
+    "express-session": "^1.17.2",
     "formidable": "^1.2.2",
-    "mysql": "^2.18.1"
+    "mustache": "^4.2.0",
+    "mysql": "^2.18.1",
+    "owl.carousel": "^2.3.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.12"
   }
 }

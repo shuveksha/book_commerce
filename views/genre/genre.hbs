@@ -1,0 +1,54 @@
+{{> header }}
+
+<div class="container mt-5">
+
+
+    <div class="row">
+        <div class="col-md-8 col-sm-12">
+
+            <h2 class="fs-5">Books</h2>
+            <div class="row">
+
+                {{#each books}}
+                <div class="col-md-3 col-sm-12">
+                    <div class="card" style="width: 12rem;">
+                        <img src="https://media.thuprai.com/__sized__/front_covers/Ekalavyako_Debre_Haat-thumbnail-280x405-70.jpg"
+                            class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title fs-6">{{title}}</h5>
+                            <p class="fs-6 text-secondary text-capitalize">Genre: {{genre}}</p>
+                            <a href="/book/{{id}}" class="btn btn-dark">Browse</a>
+                        </div>
+                    </div>
+                </div>
+
+                {{/each}}
+            </div>
+            <hr>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="row">
+                <h2 class="fs-6">Browse</h2>
+                <table class="table">
+
+                    <tbody>
+                        {{# each genre }}
+                        <tr>
+                            <td><a class="text-capitalize fs-6   text-decoration-none"
+                                    href="/genres/{{genre}}">{{genre}}</a>
+                            </td>
+                            {{/each}}
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <label for="searchGenre" class="form-label">Password</label>
+    <input type="password" id="" class="form-control" aria-describedby="passwordHelpBlock">
+
+</div>
+
+{{> footer}}

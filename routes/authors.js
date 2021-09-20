@@ -1,6 +1,7 @@
 const express = require("express");
 var con = require('../db_connect');
 const formidable = require('formidable');
+const bodyParser = require('body-parser');
 
 var router = express.Router();
 
