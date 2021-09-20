@@ -1,0 +1,40 @@
+{{> header}}
+
+<div class="container">
+    {{# if message}}
+    <div class="alert mt-5  text-capitalize alert-warning alert-dismissible fade show" role="alert">
+        <i>{{message}} &nbsp;
+
+        </i>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+
+    <a class="fs-5" href="/genres"> <i> <a href="/genres"> Browse other genres</a></i></a> <br><br><br>
+    <hr>
+
+    {{else if books}}
+    <div class="row mt-5">
+        <h2 class="fs-4 mb-4 text-capitalize">Genre: {{genre}}</h2>
+        {{#each books}}
+        <div class="col-md-3">
+            <div class="card" style="width: 14rem;">
+                <img src="{{url}}" class="card-img-top" alt="{{title}}">
+                <div class="card-body">
+                    <h5 class="card-title">{{title}}</h5>
+                    <p class="card-text">{{description}}</p>
+                    <a href="/book/{{id}}" class="btn btn-primary">Browse</a>
+                </div>
+            </div>
+        </div>
+
+
+        {{/each}}
+        <hr class="mt-5 mb-5">
+    </div>
+    {{/if}}
+
+
+</div>
+
+{{> footer }}

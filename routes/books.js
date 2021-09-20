@@ -12,7 +12,7 @@ var router = express.Router();
 router.get('/', (req, res) => {
     let sql = "select * from book";
     con.query(sql, (err, result) => {
-        if (err) 
+        if (err)
             throw err;
         res.send(result);
     })
@@ -22,9 +22,8 @@ router.get('/', (req, res) => {
 // create new book
 router.post('/', (req, res, next) => {
 
-    
-    const form = formidable({multiples: true});
-    var form  = new formidable.IncomingForm();
+
+    const form = formidable({ multiples: true });
     form.multiples = true;
     form.uploadDir = uploadDir;
     form.parse(req, (err, fields, files) => { // to store error
@@ -57,7 +56,7 @@ router.post('/', (req, res, next) => {
 
         // Write other if condition to check mandatory fields.
 
-        if (language_id === "") {}
+        if (language_id === "") { }
 
         if (errors.length !== 0) {
             res.sendStatus(400).send(errors);
@@ -105,41 +104,41 @@ router.get('/:id', function (req, res) {
         if (err) {
             res.sendStatus(500).send("Internal server error");
         } else {
-           
-            if(result.length == 0) {
+
+            if (result.length == 0) {
                 res.send(404).send("book don't exist");
             }
             res.send(result);
         }
-      
+
     });
 });
 
-router.delete('/:id', (req, res) => { 
+router.delete('/:id', (req, res) => {
     // Grab the book id from url to delete
-   let id = req.params.id;
+    let id = req.params.id;
 
-   // check whether that book having that ID doesn't exist in table or not.
-   let sql = "select * from book where id=?";
+    // check whether that book having that ID doesn't exist in table or not.
+    let sql = "select * from book where id=?";
 
-   con.query(sql, [id], function(err, result) {
+    con.query(sql, [id], function (err, result) {
 
         if (result.length == 0) {
             // Book don't exist
             res.sendStatus(404);
         } else {
 
-        
 
-        // run delete query 
-        con.query("delete from book where id=?", [id], function(err, result){
-                if(err) throw err;
+
+            // run delete query 
+            con.query("delete from book where id=?", [id], function (err, result) {
+                if (err) throw err;
                 res.send(result);
-        });
+            });
 
-    }
+        }
 
-   });
+    });
 });
 
 
