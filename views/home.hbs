@@ -2,32 +2,51 @@
 <div class="container mt-3">
 
     <h2 class="fs-5">New Releases</h2>
-    <hr>
-
     <div class="owl-carousel owl-theme">
-
-
-        {{#each items}}
+        {{#each newRelease}}
         <div class="card item" style="width: 14rem;">
             <img src="https://media.thuprai.com/__sized__/front_covers/Nritakshar_bigyan-thumbnail-280x405-70.jpg"
-                class="card-img-top" alt="...">
+                class="card-img-top" alt="{{title}}">
             <div class="card-body">
-                <h2 class="fs-6">Nepolean Bonapart</h2>
-                <a href="#" class="btn btn-success text-left">Add to cart</a>
+                <h2 class="text-left fs-6">{{title}}</h2>
+                <a href="/book/{{id}}/{{title}}" class="btn btn-dark">Browse</a>
             </div>
         </div>
         {{/each}}
-
     </div>
 
+    <hr>
 
+    <h2 class="fs-5">Best Selling</h2>
+    <div class="owl-carousel owl-theme">
+        {{#each bestSelling}}
+        <div class="card item" style="width: 14rem;">
+            <img src="https://media.thuprai.com/__sized__/front_covers/Nritakshar_bigyan-thumbnail-280x405-70.jpg"
+                class="card-img-top" alt="{{title}}">
+            <div class="card-body">
+                <h2 class="text-left fs-6">{{title}}</h2>
+                <a href="/book/{{id}}" class="btn btn-dark">Browse</a>
+            </div>
+        </div>
+        {{/each}}
+        <hr>
+    </div>
 
-    <h2 class="fs-5">Audio Books</h2>
     <hr>
     <h2 class="fs-5">Ebooks</h2>
-
-
+    <div class="owl-carousel owl-theme mb-5">
+        {{#each ebooks}}
+        <div class="card item" style="width: 14rem;">
+            <img src="https://media.thuprai.com/__sized__/front_covers/Nritakshar_bigyan-thumbnail-280x405-70.jpg"
+                class="card-img-top" alt="{{title}}">
+            <div class="card-body">
+                <h2 class="text-left fs-6">{{title}}</h2>
+                <a href="/book/{{id}}" class="btn btn-dark">Browse</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
 
 </div>
-
+<hr>
 {{> footer }}

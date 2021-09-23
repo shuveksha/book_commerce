@@ -1,0 +1,10 @@
+{{> dashboard_nav}}
+<div class="card">
+    <div class="card-body">
+        <form method="post" action="/dashboard/publisher/delete">
+            <h5 class="card-title">Are you sure to delete <span class="fs-5 text-danger">{{title}} </span></h5>
+            <input type="hidden" name="publisher_id" value={{publisherId}}>
+            <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+    </div>
+</div>
+{{> dashboard_footer}}

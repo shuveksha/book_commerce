@@ -1,0 +1,114 @@
+{{> dashboard_nav}}
+
+
+<form method="post" action="/dashboard/book/update" enctype="multipart/form-data">
+
+    <!-- title -->
+    <div class="mb-3">
+        <label for="title" class="form-label">Title </label>
+        <input type="text" class="form-control" value="{{book.title}}" name="title" id="title">
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" name="description" id="description">{{book.description}} </textarea>
+    </div>
+
+    <!-- price -->
+    <div class="mb-3">
+        <label for="price" class="form-label">Price </label>
+        <input type="number" class="form-control" value="{{book.price}}" name="price" id="price">
+    </div>
+
+    <!-- Author -->
+    <div class="mb-3">
+        <label for="author" class="form-label">Author</label>
+        <select class="form-select" multiple aria-label="Author list" name="author" id="author">
+            <option selected>Author </option>
+            <option value="1">Manoj Gautam</option>
+            <option value="2">Tulsi Gautam</option>
+            <option value="3">Laxmi</option>
+        </select>
+    </div>
+
+    <!-- thumbnail -->
+    <div class="mb-3">
+        <label for="thumbnail" class="form-label">Thumbnail</label>
+        <input type="file" class="form-control" name="thumbnail" value={{book.thumbnail}} id="thumbnail">
+    </div>
+
+    <!-- genre -->
+    <div class="mb-3">
+        <label for="genre" class="form-label">Genre</label>
+        <select class="form-select" aria-label="select genre" name="genre">
+            {{#each genres}}
+            <option {{#if (eq book.genre_id.match genre.id)}}selected{{/if}} value="{{id}}">{{genre}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+
+    <!-- edition -->
+    <div class="mb-3 form-group">
+        <label class="form-label" for="edition">Edition</label>
+        <input type="number" value="{{book.edition}}" class="form-control" name="edition" id="edition">
+    </div>
+
+    <!-- isbn no -->
+    <div class="mb-3 form-group">
+        <label class="form-label" for="isbn">ISBN</label>
+        <input type="number" value="{{book.isbno}}" class=" form-control" name="isbn" id="isbn">
+    </div>
+
+    <!-- pages -->
+    <div class="mb-3 form-group">
+        <label class="form-label" for="pages">Pages</label>
+        <input type="number" value="{{book.pages}}" class="form-control" name="pages" id="pages">
+    </div>
+
+    <!-- publisher -->
+    <div class="mb-3">
+
+        <label for="publisher" class="form-label">Publisher</label>
+        <select class="form-select" aria-label="Select publisher" name="publisher">
+            <option>Select publisher</option>
+            {{#each publishers}}
+            <option {{#if (eq book.publisher_id id)}}selected {{/if}} value={{id}}>{{name}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <!-- url -->
+    <div class="mb-3">
+        <label class="input-label" for="url">Upload file</label>
+        <input type="file" class="form-control" value={{book.url}} name="url" id="url">
+    </div>
+
+    <!-- new selling -->
+    <div class="form-check">
+        <input class="form-check-input" {{#if book.new_selling}}checked{{/if}} type="checkbox"
+            value="{{book.new_selling}}" id="new_selling" name="new_selling">
+        <label class="form-check-label" for="new_selling">
+            is NewSelling
+        </label>
+    </div>
+
+
+    <!-- best selling -->
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" {{#if book.best_selling}}checked{{/if}}
+            value="{{book.best_selling}}" id="best_selling" name="best_selling">
+        <label class="form-check-label" for="best_selling">
+            is BestSelling
+        </label>
+    </div>
+
+    <!-- Add book -->
+    <div class="mb-3">
+        <input type="submit" class="form-control btn btn-dark" value="Update Book">
+    </div>
+
+</form>
+
+{{> dashboard_footer}}

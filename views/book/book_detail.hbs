@@ -1,5 +1,4 @@
 {{> header}}
-
 <div class="container">
     <div class="m-3">
         <div class="row">
@@ -15,15 +14,6 @@
 
                         </div>
 
-                        <ul class="list-unstyled">
-                            <li class="fs-5"><span class="fs-4 mr-5">Genre:</span> Fiction</li>
-                            <li><span class="fs-5 mr-5">Language:</span> Nepali</li>
-
-                            <li><span class="fs-5 mr-5">Published:</span> 11 April 2011</li>
-
-                            <li><span class="fs-5 mr-5">Edition:</span> Fiction</li>
-
-                        </ul>
 
                     </div>
                 </div>
@@ -35,78 +25,73 @@
 
 
                 <div class="card text-center">
-                    <div class="card-header">
-
+                    <div class="card-header text-start text-uppercase">
+                        product Details
                     </div>
                     <div class="card-body" style="text-align:left">
-                        <h5 class="card-title fs-4"> Mokshanta : Kathmandu Fever(मोक्षान्त: काठमाण्डु फिभर)
+                        <h5 class="card-title fs-4">{{book.title}}
                         </h5>
                         <p class="fs-6">By: Kumar Nagarkoti</p>
-                        <p class="card-text">
+                        <h5 class="fs-5">Description:</h5>
+                        <p class="cart-text">{{book.description}}</p>
+
+                        <div class="row">
+
+
+                            <div class="card m-3">
+
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark fs-5">Price: {{book.price}}</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional
+                                        content.</p>
+                                    <a href="/cart/add/{{book.id}}" class=" btn btn-dark">Add to cart</a>
+                                    <a href="{{book.url}}" class=" btn btn-outline-dark">Read online</a>
+                                </div>
+                            </div>
+
+                        </div>
+
 
                         <div class="row mb-5">
-                            <div class="col-md-4 col-sm-12">
-                                <div class="card" style="width: 14rem;">
-                                    <div class="card-body">
-                                        <h5 class="fs-5">Ebook</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">Rs 255</h6>
 
-                                        <div class="m-3">
-                                            <a href="#" class="btn btn-dark">Read Now</a>
-                                        </div>
-                                        <div class="m-3">
-                                            <a href="#" class="btn btn-outline-dark">Add to Cart</a>
-                                        </div>
-                                        <div class="m-3">
-                                            <a href="#" class="text-secondary">Send as gift</a>
-                                        </div>
-                                    </div>
+
+                            <div class="card m-3">
+
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark fs-5">Book Details</h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item text-capitalize"><span
+                                                class="fs-5 mr-5 text-capitalize">Genre:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a class="text-decoration-none"
+                                                href="/genres/{{book.genre}}">{{book.genre}}</a>
+                                        </li>
+
+                                        <li class="list-group-item"><span
+                                                class="fs-5 mr-5 ">Publisher:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a class="text-decoration-none"
+                                                href="/publishers">{{book.publisher_name}}</a>
+                                        </li>
+
+
+
+                                        <li class="list-group-item"><span
+                                                class="fs-5 mr-5">Isbnno:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{book.isbno}}
+                                        </li>
+                                        <li class="list-group-item"><span
+                                                class="fs-5 mr-5">Pages:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{book.pages}}
+                                        </li>
+                                        <li class="list-group-item"><span class="fs-5 mr-5">New
+                                                Release:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{book.new_release}}
+                                        </li>
+                                        <li class="list-group-item"><span class="fs-5 mr-5">Best
+                                                Selling:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{book.best_selling}}
+                                        </li>
+
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="card" style="width: 14rem;">
-                                    <div class="card-body">
-                                        <h5 class="fs-5">PaperBook</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">Rs 255</h6>
 
-                                        <div class="m-3">
-                                            <a href="#" class="btn btn-dark">Buy Now</a>
-                                        </div>
-                                        <div class="m-3">
-                                            <a href="#" class="btn btn-outline-dark">Add to Cart</a>
-                                        </div>
-                                        <div class="m-3">
-                                            <a href="#" class="text-secondary">Send as gift</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <!-- 
-                                <div class="card" style="width: 14rem;">
-                                    <div class="card-body">
-                                        <h5 class="fs-4">OtherPlatform</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">Rs 255</h6>
-
-                                        <div class="m-3">
-                                            <a href="#" class="btn btn-dark">Read Now</a>
-                                        </div>
-                                        <div class="m-3">
-                                            <a href="#" class="btn btn-outline-dark">Add to Cart</a>
-                                        </div>
-                                        <div class="m-3">
-                                            <a href="#" class="text-secondary">Send as gift</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                -->
-                            </div>
                         </div>
-                        <h2 class="fs-5">About book</h2>
-                        पुस्तकको बारेमा
-                        'कल्प-ग्रन्थ' फिक्सन डिजाइनर कुमार नगरकोटीको कथा सङ्ग्रह हो । प्रिमियम संस्करणमा प्रकाशन हुने यस
-                        पुस्तकमा टाइपोग्राफिक, कन्सेप्चुअल, ग्रे, पोस्टकार्ड, इन्स्टलेसन, स्कृन प्ले, ट्रान्स क्रियटेड
-                        लगायतका विभिन्न ६३ वटा कथाहरु समेटिएको छ ।
 
                     </div>
 

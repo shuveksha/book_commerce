@@ -1,0 +1,35 @@
+{{> dashboard_nav}}
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn text-right btn-dark btn-sm"><a class="text-decoration-none text-white"
+                href="/dashboard/publisher/add">Add new Publisher</a></div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Update</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each publisher}}
+        <tr>
+            <th scope="row">{{@key }}</th>
+            <td>{{name}}</td>
+            <td>{{email}}</td>
+            <td>{{phone}}</td>
+            <td><a class="btn btn-sm btn-danger"
+                    href="/dashboard/publisher/delete?publisherId={{id}}&publisherTitle={{name}}">Delete</a></td>
+            <td><a class="btn btn-sm btn-dark"
+                    href="/dashboard/publisher/update?publisherId={{id}}&publisherTitle={{name}}"">Update</a></td>
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{>dashboard_footer}}

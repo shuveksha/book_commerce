@@ -1,0 +1,46 @@
+{{> dashboard_nav}}
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn text-right btn-dark btn-sm"><a class="text-decoration-none text-white"
+                href="/dashboard/book/add">Add new Book</a></div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">cover</th>
+            <th scope="col">title</th>
+            <th scope="col">price</th>
+            <th scope="col">pages</th>
+            <th scope="col">isbn</th>
+            <th scope="col">New Release</th>
+            <th scope="col">Best Selling</th>
+            <th scope="col">Browse</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Update</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each books}}
+        <tr>
+            <th scope="row">{{@key }}</th>
+            <td><img src="{{thumbnail}}" /></td>
+            <td>{{title}}</td>
+            <td>{{price}}</td>
+            <td>{{pages}}</td>
+            <td>{{isbn}}</td>
+            <td>{{#if new_release}} Yes {{else}} No {{/if}}</td>
+            <td>{{#if best_selling}} Yes {{else}} No {{/if}}</td>
+            <td><a class="btn btn-sm btn-primary" href="/book/{{id}}/{{title}}">Browse</a>
+            </td>
+            <td><a class="btn btn-sm btn-danger" href="/dashboard/book/delete/{{id}}/{{title}}">Delete</a>
+            </td>
+            <td><a class="btn btn-sm btn-dark" href="/dashboard/book/update/{{id}}/{{title}}">Update</a>
+            </td>
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{>dashboard_footer}}
