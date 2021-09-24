@@ -12,8 +12,7 @@
                 {{#each books}}
                 <div class="col-md-3 col-sm-12">
                     <div class="card" style="width: 12rem;">
-                        <img src="https://media.thuprai.com/__sized__/front_covers/Ekalavyako_Debre_Haat-thumbnail-280x405-70.jpg"
-                            class="card-img-top" alt="...">
+                        <img src="{{this.thumbnail}}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title fs-6">{{title}}</h5>
                             <p class="fs-6 text-secondary text-capitalize">Genre: {{genre}}</p>
@@ -46,8 +45,6 @@
         </div>
     </div>
 
-    <label for="searchGenre" class="form-label">Password</label>
-    <input type="password" id="" class="form-control" aria-describedby="passwordHelpBlock">
 
 </div>
 
