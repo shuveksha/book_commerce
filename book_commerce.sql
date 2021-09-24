@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2021 at 12:12 PM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.2.34
+-- Generation Time: Sep 24, 2021 at 06:07 AM
+-- Server version: 10.4.17-MariaDB
+-- PHP Version: 8.0.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -61,34 +61,30 @@ CREATE TABLE `book` (
   `description` text DEFAULT NULL,
   `price` double DEFAULT NULL,
   `author_id` int(11) NOT NULL,
-  `thumbnail` blob DEFAULT NULL,
+  `thumbnail` varchar(500) DEFAULT 'https://media.thuprai.com/__sized__/front_covers/Gya_Kumar_Nagarkoti-thumbnail-280x405-70.jpg',
   `genre_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `edition` int(11) DEFAULT NULL,
   `isbno` varchar(255) NOT NULL,
   `pages` int(11) DEFAULT NULL,
   `publisher_id` int(11) DEFAULT NULL,
-  `url` varchar(255) NOT NULL
+  `url` varchar(255) NOT NULL,
+  `new_release` tinyint(1) DEFAULT 1,
+  `best_selling` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `book`
 --
 
-INSERT INTO `book` (`id`, `title`, `description`, `price`, `author_id`, `thumbnail`, `genre_id`, `language_id`, `edition`, `isbno`, `pages`, `publisher_id`, `url`) VALUES
-(2, 'The Haunted Hotel', 'A to Z Mysteries ', 100, 0, NULL, 0, 0, 1, '9780679890799', 250, NULL, 'file:///C:/Users/Lenovo/Downloads/blank.pdf'),
-(3, 'Blessed Monsters: A Novel (Something Dark and Holy, 3,\r\n    The girl, the monster, the prince, the queen.', 'They broke the world.\r\n\r\nAnd some things can never be undone.\r\n', 1599, 0, NULL, 0, 0, 3, '978-1250195722', 528, NULL, 'file:///C:/Users/Lenovo/Downloads/blank.pdf'),
-(4, 'Everything Is F*cked', 'Mark Manson, author of the international mega-bestseller, \'The Subtle Art of Not Giving a F*ck\' has come up with another guide to the problems of modern life. In this book, the author questions our assumptions on what makes life worth living.\r\n\r\nEver  2880 wonder why greater connectivity seems to make everyone just hate each other more? Ever wonder why the news always seems so depressing? Ever wonder why people are seemingly becoming more anxious and miserable despite life getting easier?', 800, 0, NULL, 0, 0, 1, '9780062898920', 273, NULL, ''),
-(5, 'A Promised Land', 'his is a memoir by Barack Obama. It is the first of a planned two books that Barak Obama has written following his period as President of the United States from 2009 to 2017.', 2880, 0, NULL, 0, 0, 1, '9781524763169', 768, NULL, ''),
-(6, 'Why Nations Fail', 'Shortlisted for the Financial Times and Goldman Sachs Business Book of the Year Award 2012.\r\n\r\nIs it culture, the weather, geography? Perhaps ignorance of what the right policies are? \r\nSimply, no. None of these factors is either definitive or destiny. Otherwise, how to explain why Botswana has become one of the fastest growing countries in the world, while other African nations, such as Zimbabwe, the Congo, and Sierra Leone, are mired in poverty and violence? \r\n\r\n\r\nDaron Acemoglu and James Robinson conclusively show that it is man-made political and economic institutions that underlie economic success (or lack of it). Korea, to take just one of their fascinating examples, is a remarkably homogeneous nation, yet the people of North Korea are among the poorest on earth while their brothers and sisters in South Korea are among the richest. The south forged a society that created incentives, rewarded innovation, and allowed everyone to participate in economic opportunities. \r\nThe economic success thus spurred was sustained because the government became accountable and responsive to citizens and the great mass of people. Sadly, the people of the north have endured decades of famine, political repression, and very different economic institutions—with no end in sight. The differences between the Koreas is due to the politics that created these completely different institutional trajectories. \r\n\r\n\r\nBased on fifteen years of original research Acemoglu and Robinson marshall extraordinary historical evidence from the Roman Empire, the Mayan city-states, medieval Venice, the Soviet Union, Latin America, England, Europe, the United States, and Africa to build a new theory of political economy with great relevance for the big questions of today.', 399, 0, NULL, 0, 0, 1, '9781846684302', 544, NULL, ''),
-(7, 'Jeevan Jiune Kaida', 'The book deals with ways of living a long and healthy life. The author argues that although people often attribute a long and healthy life to genes and portray the genetic makeup as the sole determiner of health, that need not be the case. Eating healthy and in moderation, exercising regularly, and living in a clean environment, according to the author, do not just make a person healthy, but also undo or dilute the effects of certain harmful genetic mutations.', 175, 0, NULL, 0, 0, 1, '9789937892452', 256, NULL, ''),
-(8, 'A Brief History of Humankind ', 'From a renowned historian comes a groundbreaking narrative of humanity’s creation and evolution—a #1 international bestseller—that explores the ways in which biology and history have defined us and enhanced our understanding of what it means to be “human.”\r\n\r\nOne hundred thousand years ago, at least six different species of humans inhabited Earth. Yet today there is only one—homo sapiens. What happened to the others? And what may happen to us?\r\n\r\nMost books about the history of humanity pursue either a historical or a biological approach, but Dr. Yuval Noah Harari breaks the mold with this highly original book that begins about 70,000 years ago with the appearance of modern cognition. From examining the role evolving humans have played in the global ecosystem to charting the rise of empires, Sapiens integrates history and science to reconsider accepted narratives, connect past developments with contemporary concerns, and examine specific events within the context of larger ideas.\r\n\r\nDr. Harari also compels us to look ahead, because over the last few decades humans have begun to bend laws of natural selection that have governed life for the past four billion years. We are acquiring the ability to design not only the world around us, but also ourselves. Where is this leading us, and what do we want to become?\r\n\r\nFeaturing 27 photographs, 6 maps, and 25 illustrations/diagrams, this provocative and insightful work is sure to spark debate and is essential reading for aficionados of Jared Diamond, James Gleick, Matt Ridley, Robert Wright, and Sharon Moalem.', 960, 0, NULL, 0, 0, 1, '9780099590088', 360, NULL, ''),
-(9, 'Software Engineering', '', 500, 0, NULL, 0, 0, 10, '9789332582699', 808, NULL, ''),
-(13, 'java', '', 3000, 2, '', 3, 20, 0, '123849', 300, 10, 'book.pdf'),
-(14, 'java', '', 3000, 2, '', 3, 20, 0, '123849', 300, 10, 'book.pdf'),
-(15, 'java', '', 3000, 2, '', 3, 20, 0, '123849', 300, 10, 'book.pdf'),
-(16, 'java', '', 3000, 2, '', 3, 20, 0, '123849', 300, 10, 'book.pdf'),
-(19, 'chemistry', '', 3500, 3, '', 3, 3, 0, '', 0, 3, '');
+INSERT INTO `book` (`id`, `title`, `description`, `price`, `author_id`, `thumbnail`, `genre_id`, `language_id`, `edition`, `isbno`, `pages`, `publisher_id`, `url`, `new_release`, `best_selling`) VALUES
+(2, 'Tyas Bakhatko Nepal', 'A to Z ‘त्यस बखतको नेपाल’ विसं. २०३८ मा छापिएको पुस्तक हो । पुस्तकमा १९७७–२००७ साल सम्मका पाँच जना राणा प्रधानमन्त्रीका पालामा भरपर्दो स्रोतबाट सुनेको, लेखक आफैले देखेका र खास आफैले भोगेका घटनाहरु समेटिएको छ ।यस पुस्तकमा पाँडेले राणाकाल अवधीमा भएका सामाजिक, आर्थिक र राजनीतिक इतिहासको बारेमा चर्चा गरेका छन्।\r\n\r\nपाँडेको यो किताबमा राणाकालको आखिरी तीन दशक भित्रको समयताका भएका राणा व्यवस्था चरमचोटीमा, नेपालमा आर्थिक विकासको कल्पना, नेपालमा प्रजातन्त्रको प्रवेश र नेपालको प्रशानिक जगको बारेमा उल्लेख गरेका छन्।\r\n\r\nयस पुस्तकबाट पाठकले सती प्रथा, दास प्रथा लगाएत राणाकालका सुधार, त्यस बेलाको नेपाली समाजको चेतनाको स्तर तथा राणाहरूले सत्ता टिकाउन गरेका अनेक प्रयत्नको बेलिविस्तारका बारेमा जानकारी पाउन सक्छन्।\r\n\r\nपाँडे ६८ बर्षको हुदाँ विसं. २०३८ मा ‘त्यस बखतको नेपाल’ छापिएको हो । पुस्तकमा १९७७–२००७ साल सम्मका पाँच जना राणा प्रधानमन्त्रीका पालामा भरपर्दो स्रोतबाट सुनेको, लेखक आफैले देखेका र खास आफैले भोगेका घटनाहरु समेटिएको छ ।\r\n\r\nभाग एक - (राणा व्यवस्था चरमचोटीमा) ISBN : 9789937705455 \r\n\r\nभाग दुई र तीन - (नेपालमा आर्थिक बिकासको कल्पना) ISBN : 9789937705448 \r\n\r\nभाग चार - (नेपालमा प्रजातन्त्रको प्रवेश ) ISBN :9789937705431 \r\n\r\nभाग पांच - (नेपालको प्रशासनिक जग ) ISBN : 9789937705424 ', 1800, 0, 'https://media.thuprai.com/__sized__/front_covers/Tyes_Bakhat_ko_Nepal_-_Part_1_to_5_-_Bhim_Bahadur_Pandey-thumbnail-280x405-70.jpg', 24, 0, 5, '9789937705455', 250, 8, 'file:///C:/Users/Lenovo/Downloads/blank.pdf', 1, 1),
+(3, 'Blessed Monsters: ', 'They broke the world.\r\n\r\nAnd some things can never be undone.\r\n', 1599, 0, 'https://media.thuprai.com/__sized__/front_covers/Gya_Kumar_Nagarkoti-thumbnail-280x405-70.jpg', 24, 0, 3, '978-1250195722', 528, 8, 'file:///C:/Users/Lenovo/Downloads/blank.pdf', 1, 1),
+(4, 'Everything Is F*cked', 'Mark Manson, author of the international mega-bestseller, \'The Subtle Art of Not Giving a F*ck\' has come up with another guide to the problems of modern life. In this book, the author questions our assumptions on what makes life worth living.\r\n\r\nEver  2880 wonder why greater connectivity seems to make everyone just hate each other more? Ever wonder why the news always seems so depressing? Ever wonder why people are seemingly becoming more anxious and miserable despite life getting easier?', 800, 0, 'https://media.thuprai.com/__sized__/front_covers/Gya_Kumar_Nagarkoti-thumbnail-280x405-70.jpg', 27, 0, 1, '9780062898920', 273, NULL, '', 1, 1),
+(5, 'A Promised Land', 'his is a memoir by Barack Obama. It is the first of a planned two books that Barak Obama has written following his period as President of the United States from 2009 to 2017.', 2880, 0, 'https://media.thuprai.com/__sized__/front_covers/Gya_Kumar_Nagarkoti-thumbnail-280x405-70.jpg', 28, 0, 1, '9781524763169', 768, 8, '', 1, 1),
+(6, 'Why Nations Fail', 'Shortlisted for the Financial Times and Goldman Sachs Business Book of the Year Award 2012.\r\n\r\nIs it culture, the weather, geography? Perhaps ignorance of what the right policies are? \r\nSimply, no. None of these factors is either definitive or destiny. Otherwise, how to explain why Botswana has become one of the fastest growing countries in the world, while other African nations, such as Zimbabwe, the Congo, and Sierra Leone, are mired in poverty and violence? \r\n\r\n\r\nDaron Acemoglu and James Robinson conclusively show that it is man-made political and economic institutions that underlie economic success (or lack of it). Korea, to take just one of their fascinating examples, is a remarkably homogeneous nation, yet the people of North Korea are among the poorest on earth while their brothers and sisters in South Korea are among the richest. The south forged a society that created incentives, rewarded innovation, and allowed everyone to participate in economic opportunities. \r\nThe economic success thus spurred was sustained because the government became accountable and responsive to citizens and the great mass of people. Sadly, the people of the north have endured decades of famine, political repression, and very different economic institutions—with no end in sight. The differences between the Koreas is due to the politics that created these completely different institutional trajectories. \r\n\r\n\r\nBased on fifteen years of original research Acemoglu and Robinson marshall extraordinary historical evidence from the Roman Empire, the Mayan city-states, medieval Venice, the Soviet Union, Latin America, England, Europe, the United States, and Africa to build a new theory of political economy with great relevance for the big questions of today.', 399, 26, 'https://media.thuprai.com/__sized__/front_covers/Gya_Kumar_Nagarkoti-thumbnail-280x405-70.jpg', 24, 0, 1, '9781846684302', 544, 8, '', 1, 1),
+(7, 'Jeevan Jiune Kaida', 'The book deals with ways of living a long and healthy life. The author argues that although people often attribute a long and healthy life to genes and portray the genetic makeup as the sole determiner of health, that need not be the case. Eating healthy and in moderation, exercising regularly, and living in a clean environment, according to the author, do not just make a person healthy, but also undo or dilute the effects of certain harmful genetic mutations.', 175, 0, 'https://media.thuprai.com/__sized__/front_covers/Gya_Kumar_Nagarkoti-thumbnail-280x405-70.jpg', 23, 0, 1, '9789937892452', 256, 8, '', 1, 1),
+(8, 'A Brief History of Humankind ', 'From a renowned historian comes a groundbreaking narrative of humanity’s creation and evolution—a #1 international bestseller—that explores the ways in which biology and history have defined us and enhanced our understanding of what it means to be “human.”\r\n\r\nOne hundred thousand years ago, at least six different species of humans inhabited Earth. Yet today there is only one—homo sapiens. What happened to the others? And what may happen to us?\r\n\r\nMost books about the history of humanity pursue either a historical or a biological approach, but Dr. Yuval Noah Harari breaks the mold with this highly original book that begins about 70,000 years ago with the appearance of modern cognition. From examining the role evolving humans have played in the global ecosystem to charting the rise of empires, Sapiens integrates history and science to reconsider accepted narratives, connect past developments with contemporary concerns, and examine specific events within the context of larger ideas.\r\n\r\nDr. Harari also compels us to look ahead, because over the last few decades humans have begun to bend laws of natural selection that have governed life for the past four billion years. We are acquiring the ability to design not only the world around us, but also ourselves. Where is this leading us, and what do we want to become?\r\n\r\nFeaturing 27 photographs, 6 maps, and 25 illustrations/diagrams, this provocative and insightful work is sure to spark debate and is essential reading for aficionados of Jared Diamond, James Gleick, Matt Ridley, Robert Wright, and Sharon Moalem.', 960, 0, 'https://media.thuprai.com/__sized__/front_covers/Gya_Kumar_Nagarkoti-thumbnail-280x405-70.jpg', 27, 0, 1, '9780099590088', 360, 8, '', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -106,6 +102,31 @@ CREATE TABLE `book_author` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `book_book_type`
+--
+
+CREATE TABLE `book_book_type` (
+  `id` int(11) NOT NULL,
+  `book_id` int(11) NOT NULL,
+  `book_type_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `book_book_type`
+--
+
+INSERT INTO `book_book_type` (`id`, `book_id`, `book_type_id`) VALUES
+(4, 5, 1),
+(5, 5, 2),
+(6, 5, 3),
+(7, 7, 3),
+(1, 8, 1),
+(2, 8, 2),
+(3, 8, 3);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `book_genre`
 --
 
@@ -115,6 +136,55 @@ CREATE TABLE `book_genre` (
   `genre_id` int(11) NOT NULL,
   `remarks` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `book_type`
+--
+
+CREATE TABLE `book_type` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `book_type`
+--
+
+INSERT INTO `book_type` (`id`, `type`) VALUES
+(1, 'audio'),
+(2, 'ebook'),
+(3, 'paperback');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `user_id`, `product_id`, `quantity`) VALUES
+(1, 3, 2, 300),
+(3, 4, 3, 200),
+(4, 5, 3, 200),
+(5, 3, 2, 12),
+(6, 3, 7, 1),
+(7, 3, 3, 1),
+(8, 3, 5, 1),
+(9, 3, 6, 1),
+(10, 3, 4, 12),
+(11, 3, 2, 2147483647);
 
 -- --------------------------------------------------------
 
@@ -133,11 +203,11 @@ CREATE TABLE `genre` (
 --
 
 INSERT INTO `genre` (`id`, `genre`, `description`) VALUES
-(3, 'Self-help\r\n', 'A self-help book is one that is written with the intention to instruct its readers on solving personal problems.'),
+(3, 'Self-help0', 'A self-help book is one that is written with the intention to instruct its readers on solving personal problems.123'),
 (20, 'Fantasy', 'Fantasy is a genre that’s identified by the use of magic within it.'),
 (22, 'Horror', 'Meant to cause discomfort and fear for both the character and readers, horror writers often make use of supernatural and paranormal elements in morbid stories that are sometimes a little too realistic.'),
 (23, 'Science Fiction', 'Also known as Sci-Fi, science fiction deals with the imagined future in terms of science or technology advances. This genre includes things like time travel, outer space, and intelligent life.'),
-(24, 'biography', 'A biography, or simply bio, is a detailed description of a person\'s life. It involves more than just the basic facts like education, work, relationships, and death; it portrays a person\'s experience of these life events.'),
+(24, 'Nepali History', 'A biography, or simply bio, is a detailed description of a person\'s life. It involves more than just the basic facts like education, work, relationships, and death; it portrays a person\'s experience of these life events.'),
 (25, 'Mystery', 'Mystery fiction is a loosely-defined term that is often used as a synonym of detective fiction — in other words a novel or short story in which a detective (either professional or amateur) solves a crime.'),
 (26, 'Romance', 'A romance novel or romantic novel is a type of genre fiction novel which places its primary focus on the relationship and romantic love between two people, and usually has an emotionally satisfying and optimistic ending.'),
 (27, 'Thriller', 'Thriller is a genre of fiction, having numerous, often overlapping subgenres. Thrillers are characterized and defined by the moods they elicit, giving viewers heightened feelings of suspense, excitement, surprise, anticipation and anxiety.'),
@@ -171,7 +241,7 @@ CREATE TABLE `language` (
 --
 
 INSERT INTO `language` (`id`, `language`, `code1`, `code2`) VALUES
-(3, 'Afghanistan', 'af', 'afg'),
+(0, 'Nepali', 'af', 'afg'),
 (8, 'Albania', 'al', 'alb'),
 (10, 'Antarctica', 'aq', 'ata'),
 (12, 'Algeria', 'dz', 'dza'),
@@ -424,18 +494,46 @@ INSERT INTO `language` (`id`, `language`, `code1`, `code2`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ordered_items`
+--
+
+CREATE TABLE `ordered_items` (
+  `id` int(11) NOT NULL,
+  `user_order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `ordered_price` int(11) DEFAULT NULL,
+  `ordered_quantity` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `ordered_items`
+--
+
+INSERT INTO `ordered_items` (`id`, `user_order_id`, `product_id`, `ordered_price`, `ordered_quantity`) VALUES
+(2, 1, 2, 100, 300),
+(3, 1, 2, 100, 12),
+(4, 1, 7, 175, 1),
+(5, 1, 3, 1599, 1),
+(6, 1, 5, 2880, 1),
+(7, 1, 6, 399, 1),
+(8, 1, 4, 800, 12),
+(9, 1, 2, 100, 2147483647);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `publisher`
 --
 
 CREATE TABLE `publisher` (
-  `image` blob NOT NULL,
+  `image` varchar(255) DEFAULT 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Icon_of_MS_Publisher_%282019%29.png',
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `phone` double NOT NULL,
   `email` varchar(255) NOT NULL,
-  `twitter` varchar(255) NOT NULL,
-  `instagram` varchar(255) NOT NULL,
-  `facebook` varchar(255) NOT NULL,
+  `twitter` varchar(255) NOT NULL DEFAULT 'twitter.com',
+  `instagram` varchar(255) NOT NULL DEFAULT 'instagram.com',
+  `facebook` varchar(255) NOT NULL DEFAULT 'facebook.com',
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -444,17 +542,87 @@ CREATE TABLE `publisher` (
 --
 
 INSERT INTO `publisher` (`image`, `name`, `description`, `phone`, `email`, `twitter`, `instagram`, `facebook`, `id`) VALUES
-('', 'Wednesday Books', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt', 586178, 'vulputate@gmail.com', '', '', '', 1),
-('', 'Orion Children\'s Books', 'Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem', -84899377, '', '', '', '', 2),
-('', 'Random House', 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia ', -998838341, 'quae@explicabo.com', '', '', '', 3),
-('', 'HarperLuxe', '-98340', 0, 'spring@yahoo.com', '', '', '', 4),
-('', 'Crown Publishing Group\r\n', 'abc def ghi jkl mno pqrs tuv wxyz ABC DEF GHI JKL MNO PQR', -356696, 'ABC@gmail.com', '', '', '', 5),
+('', 'Orion Children\'s Books1', 'desg', 9818284095, 'manojit.gautam@gmail.com', '', '', '', 2),
+('', 'Self Help', 'A self-help book is one that is written with the intention to instruct its readers on solving personal problems.', 9843175898, 'manojit.gautam@gmail.com', '', '', '', 3),
+('', 'HarperLuxe', 'sdfasff', 9779818284095, 'spring@yahoo.com', '', '', '', 4),
+('', 'Crown Publishing Group', 'abc def ghi jkl mno pqrs tuv wxyz ABC DEF GHI JKL MNO PQR', 9843175898, 'ABC@gmail.com', '', '', '', 5),
 ('', 'Publication Nepalaya', 'Publication Nepalaya is one of the leading book publication houses of Nepal.', -4412394, 'publication@nepalaya.com.np', '', '', '', 6),
-('', 'Dvir Publishing House Ltd. (Israel) Harper', '', 71928374, '', '', '', '', 7),
+('', 'Dvir Publishing House Ltd. (Israel) Harper', 'sfsafasf', 71928374, 'manojit.gautam@gmail.com', '', '', '', 7),
 ('', 'Alchemy Publication', 'Established in 2072 B.S., Alchemy Publication is a publisher of Nepali books.', -1273646, 'http://www.alchemypublication.com.np', '', '', '', 8),
 ('', 'Kitab Publishers', 'Established in 2006, FinePrint is an independent trade publishing house based in Kathmandu, Nepal. It publishes mostly fiction and literary non-fiction but is open to ideas across all genres.', -1278646, 'fineprintbooks@fineprint.com.np', '', '', '', 9),
-('', 'Ratna Pustak Bhandar,', 'रत्न पुस्तक भण्डार नेपालको एक नीजी प्रकाशनगृह हो । यसको स्थापना वि.सं. २००३ ताक काठमाडौँँका व्यापारी रत्नदास श्रेष्ठ र रत्नप्रसाद श्रेष्ठले रत्नपार्क भोटाहिटिमा गरेका थिए । यस प्रकाशनगृहले नेपाली र अङ्रेजी भाषामा भाषा, धर्म, साहित्य, संस्मरण आदि विधाका कृतिहरू प्रकाशित गर्ने गर्छ । Ratna Pustak Bhandar was established in 1946. It is the oldest book store of the country. The founders of the store are Ram Das Shrestha and Ratna Prasad Shrestha.', 12837756, 'ratnapustak@gmail.com ', '', '', '', 10),
-('', 'Jk publishers', '', 0, 'jkpublishers@gmail.com', '', '', '', 11);
+('', 'Jk publishers', 'sdfafsafs', 9779818284095, 'jkpublishers@gmail.com', '', '', '', 11);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shipping_address`
+--
+
+CREATE TABLE `shipping_address` (
+  `id` int(11) NOT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(10) NOT NULL,
+  `street_address` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `shipping_address`
+--
+
+INSERT INTO `shipping_address` (`id`, `full_name`, `email`, `phone`, `street_address`, `city`) VALUES
+(1, '', 'manojit.gautam@gmail.com', '+977981828', 'Kathmandu', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(10) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `PASSWORD` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `user_type` varchar(255) NOT NULL DEFAULT 'normal'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `name`, `PASSWORD`, `email`, `user_type`) VALUES
+(3, 'Manoj Gautam', '1234', 'manojit.gautam@gmail.com', 'admin'),
+(4, 'Manoj Gautam', 'lsjflasf', 'sdfasf@gmal.com', 'normal'),
+(5, 'Manoj Gautam', '134', 'surfer.manoj@gmail.com', 'normal'),
+(6, 'Manoj Gautam', 'lksdlajf', 'eka@gmail.com', 'normal'),
+(7, 'Manoj Gautam', 'safasfaf', 'eka1@gmail.com', 'normal'),
+(8, 'Tulsi gautam', '1234', 'tulsigautam05@gmail.com', 'normal'),
+(9, 'Ram', '1234', 'ram@gmail.com', 'normal'),
+(10, 'shyam', '123', 'shyam@gmail.com', 'normal'),
+(11, 'tulsi', 'tulsi@gmail.com', '123', 'normal'),
+(12, 'tulsi', '8848', 'tulsi@gmail.com', 'normal');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_order`
+--
+
+CREATE TABLE `user_order` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `shipping_address_id` int(11) NOT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user_order`
+--
+
+INSERT INTO `user_order` (`id`, `user_id`, `shipping_address_id`, `order_date`) VALUES
+(1, 3, 1, '2021-09-23 04:55:50');
 
 --
 -- Indexes for dumped tables
@@ -485,12 +653,34 @@ ALTER TABLE `book_author`
   ADD KEY `author_id` (`author_id`);
 
 --
+-- Indexes for table `book_book_type`
+--
+ALTER TABLE `book_book_type`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `book_id` (`book_id`,`book_type_id`),
+  ADD KEY `book_type_id` (`book_type_id`);
+
+--
 -- Indexes for table `book_genre`
 --
 ALTER TABLE `book_genre`
   ADD PRIMARY KEY (`id`),
   ADD KEY `book_id` (`book_id`),
   ADD KEY `genre_id` (`genre_id`);
+
+--
+-- Indexes for table `book_type`
+--
+ALTER TABLE `book_type`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `genre`
@@ -507,10 +697,39 @@ ALTER TABLE `language`
   ADD UNIQUE KEY `code` (`code1`);
 
 --
+-- Indexes for table `ordered_items`
+--
+ALTER TABLE `ordered_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_order_id` (`user_order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
 -- Indexes for table `publisher`
 --
 ALTER TABLE `publisher`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `shipping_address`
+--
+ALTER TABLE `shipping_address`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `user_order`
+--
+ALTER TABLE `user_order`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `shipping_address_id` (`shipping_address_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -535,16 +754,34 @@ ALTER TABLE `book_author`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `book_book_type`
+--
+ALTER TABLE `book_book_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `book_genre`
 --
 ALTER TABLE `book_genre`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `book_type`
+--
+ALTER TABLE `book_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `genre`
 --
 ALTER TABLE `genre`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `language`
@@ -553,37 +790,66 @@ ALTER TABLE `language`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=898;
 
 --
+-- AUTO_INCREMENT for table `ordered_items`
+--
+ALTER TABLE `ordered_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT for table `publisher`
 --
 ALTER TABLE `publisher`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `shipping_address`
+--
+ALTER TABLE `shipping_address`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `user_order`
+--
+ALTER TABLE `user_order`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `book`
+-- Constraints for table `book_book_type`
 --
-ALTER TABLE `book`
-  ADD CONSTRAINT `book_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`),
-  ADD CONSTRAINT `book_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`),
-  ADD CONSTRAINT `book_ibfk_3` FOREIGN KEY (`publisher_id`) REFERENCES `publisher` (`id`),
-  ADD CONSTRAINT `book_ibfk_4` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`);
+ALTER TABLE `book_book_type`
+  ADD CONSTRAINT `book_book_type_ibfk_1` FOREIGN KEY (`book_type_id`) REFERENCES `book_type` (`id`),
+  ADD CONSTRAINT `book_book_type_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`);
 
 --
--- Constraints for table `book_author`
+-- Constraints for table `cart`
 --
-ALTER TABLE `book_author`
-  ADD CONSTRAINT `book_author_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`),
-  ADD CONSTRAINT `book_author_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`);
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `book` (`id`);
 
 --
--- Constraints for table `book_genre`
+-- Constraints for table `ordered_items`
 --
-ALTER TABLE `book_genre`
-  ADD CONSTRAINT `book_genre_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`),
-  ADD CONSTRAINT `book_genre_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`);
+ALTER TABLE `ordered_items`
+  ADD CONSTRAINT `ordered_items_ibfk_1` FOREIGN KEY (`user_order_id`) REFERENCES `user_order` (`id`),
+  ADD CONSTRAINT `ordered_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `book` (`id`);
+
+--
+-- Constraints for table `user_order`
+--
+ALTER TABLE `user_order`
+  ADD CONSTRAINT `user_order_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `user_order_ibfk_2` FOREIGN KEY (`shipping_address_id`) REFERENCES `shipping_address` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

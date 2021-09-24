@@ -1,0 +1,34 @@
+{{> dashboard_nav}}
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn text-right btn-dark btn-sm"><a class="text-decoration-none text-white"
+                href="/dashboard/genre/add">Add new Genre</a></div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Genre</th>
+            <th scope="col">Description</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Update</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each publisher}}
+        <tr>
+            <th scope="row">{{@key }}</th>
+            <td>{{genre}}</td>
+            <td>{{description}}</td>
+            <td><a class="btn btn-sm btn-danger"
+                    href="/dashboard/genre/delete?genreId={{id}}&genre={{genre}}">Delete</a>
+            </td>
+            <td><a class="btn btn-sm btn-dark" href="/dashboard/genre/update?genreId={{id}}&genre={{genre}}">Update</a>
+            </td>
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{>dashboard_footer}}

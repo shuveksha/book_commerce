@@ -25,6 +25,7 @@
     "express-handlebars": "^5.3.3",
     "express-session": "^1.17.2",
     "formidable": "^1.2.2",
+    "fs": "0.0.1-security",
     "mustache": "^4.2.0",
     "mysql": "^2.18.1",
     "owl.carousel": "^2.3.4"

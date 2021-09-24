@@ -1,0 +1,35 @@
+{{> dashboard_nav}}
+
+<form method="POST" , action="/dashboard/publisher/add">
+    <!-- name -->
+    <div class="mb-3">
+        <label for="publisher_name" class="form-label">Publisher name</label>
+        <input type="text" name="name" class="form-control" id="publisher_name" aria-describedby="emailHelp">
+    </div>
+
+    <!-- description -->
+    <div class="mb-3">
+        <label for="description" class="form-label">Publisher description</label>
+        <textarea type="email" name="description" id="description" class="form-control" id="publisher_name"
+            aria-describedby="emailHelp"></textarea>
+    </div>
+
+
+    <!-- email -->
+    <div class="mb-3">
+        <label for="email" class="form-label">Publisher Email</label>
+        <input type="email" id="email" name="email" class="form-control" id="publisher_name"
+            aria-describedby="emailHelp">
+    </div>
+
+    <!-- phone -->
+    <div class="mb-3">
+        <label for="phone" class="form-label">Publisher phone</label>
+        <input type="phone" name="phone" class="form-control" id="publisher_name" aria-describedby="emailHelp">
+    </div>
+
+    <input type="submit" class="bnt btn-dark" value="Add publisher">
+
+</form>
+
+{{>dashboard_footer}}

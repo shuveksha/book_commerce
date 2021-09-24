@@ -1,0 +1,89 @@
+{{> dashboard_nav}}
+
+<div class="card">
+    <div class="card-header fs-5">
+        {{cart_message}}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Products in your cart</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col fs-5">Product </th>
+                    <th scope="col fs-5">Price</th>
+                    <th scope="col fs-5">Quantity</th>
+                    <th scope="col fs-5">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each items}}
+                <tr>
+                    <td>{{title}}</td>
+                    <td>{{price}}</td>
+                    <td>{{quantity}}</td>
+                    <td>{{sub_total}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td>Total: </td>
+                    <td></td>
+                    <td>{{total_quantity}}</td>
+                    <td>{{total_price}}</td>
+                </tr>
+            </tfoot>
+        </table>
+        <a href="" data-bs-toggle="modal" data-bs-target="#checkOutModal" class="btn btn-dark btn-sm">Checkout</a>
+    </div>
+</div>
+
+<!-- Checkout confirmation modal -->
+<div class="modal fade" tabindex="-1" id="checkOutModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Order Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <div class="modal-body">
+                <h5 class="fs-5">Shipping Details</h5>
+
+                <form method="POST" action="/dashboard/cart/checkout/order">
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="full_name" name="full_name" class="form-control" id="full_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="phone" name="phone" class="form-control" id="phone">
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Street Address</label>
+                        <input type="text" name="street_address" class="form-control" id="street_address">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="email">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Order confirm</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{> dashboard_footer}}

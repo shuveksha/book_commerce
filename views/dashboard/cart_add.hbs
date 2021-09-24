@@ -1,0 +1,54 @@
+{{> dashboard_nav}}
+
+<div class="card">
+    <div class="card-header fs-5">
+        Add to cart
+    </div>
+    <div class="card-body">
+        <form method="post" action="/cart/add">
+
+            <div class="row mb-3">
+                <label class="fs-5" for="inlineFormInputGroupUsername">{{product.title}}</label>
+
+            </div>
+
+            <input type="hidden" , name="productId" , value="{{product.id}}">
+
+            <div class="row mb-3">
+                <label class="fs-5" for="">Rs: <span id="productPrice">{{product.price}}<span></label>
+
+            </div>
+
+            <div class="row mb-3 ">
+                <label class="fs-5" for="">Quantity:</label>
+
+                <input class="form-control" onkeyup="calculateTotal()" id="productQuantity" style="max-width: 40%;"
+                    type="number" name="quantity" value="1" id="inlineFormCheck">
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </form>
+        <div class="col-12">
+            <label class="fs-5">
+
+                Your total is: <span id="total"></span>
+            </label>
+
+        </div>
+    </div>
+</div>
+<script>
+    function calculateTotal() {
+        let totalPlaceholder = document.getElementById('total');
+        let price = document.getElementById('productPrice').innerText;
+        let quantity = document.getElementById('productQuantity').value;
+        console.log(price, quantity);
+        totalPlaceholder.innerText = Number.parseInt(price) * Number.parseInt(quantity);
+    }
+
+    calculateTotal();
+
+</script>
+{{>dashboard_footer}}

@@ -14,9 +14,9 @@ var router = express.Router();
 router.get('/', function (req, res) {
     let sql = "select * from genre";
     con.query(sql, (err, result) => {
-        if (err) 
+        if (err)
             throw err;
-        
+
 
         res.send(result);
     })
@@ -26,7 +26,7 @@ router.get('/', function (req, res) {
 
 router.post('/', (req, res, next) => {
 
-    const form = formidable({multiples: true});
+    const form = formidable({ multiples: true });
     form.parse(req, (err, fields, files) => { // to store error
         let errors = Array();
 
@@ -80,41 +80,41 @@ router.get('/:id', function (req, res) {
         if (err) {
             res.sendStatus(500).send("Internal server error");
         } else {
-           
-            if(result.length == 0) {
+
+            if (result.length == 0) {
                 res.send(404).send("genre don't exist");
             }
             res.send(result);
         }
-      
+
     });
 });
 
-router.delete('/:id', (req, res) => { 
+router.delete('/:id', (req, res) => {
     // Grab the genre id from url to delete
-   let id = req.params.id;
+    let id = req.params.id;
 
-   // check whether that genre having that ID doesn't exist in table or not.
-   let sql = "select * from genre where id=?";
+    // check whether that genre having that ID doesn't exist in table or not.
+    let sql = "select * from genre where id=?";
 
-   con.query(sql, [id], function(err, result) {
+    con.query(sql, [id], function (err, result) {
 
         if (result.length == 0) {
             // genre don't exist
             res.sendStatus(404);
         } else {
 
-        
 
-        // run delete query 
-        con.query("delete from genre where id=?", [id], function(err, result){
-                if(err) throw err;
+
+            // run delete query 
+            con.query("delete from genre where id=?", [id], function (err, result) {
+                if (err) throw err;
                 res.send(result);
-        });
+            });
 
-    }
+        }
 
-   });
+    });
 });
 
 
