@@ -11,12 +11,12 @@
 
                 {{#each books}}
                 <div class="col-md-3 col-sm-12">
-                    <div class="card" style="width: 12rem;">
-                        <img src="{{this.thumbnail}}" class="card-img-top" alt="...">
+                    <div class="card" style="width: 11rem;">
+                        <img src="{{this.thumbnail}}" class="card-img-top img-fluid" alt="...">
                         <div class="card-body">
                             <h5 class="card-title fs-6">{{title}}</h5>
                             <p class="fs-6 text-secondary text-capitalize">Genre: {{genre}}</p>
-                            <a href="/book/{{id}}" class="btn btn-dark">Browse</a>
+                            <a href="/book/{{id}}/{{title}}" class="btn btn-dark">Browse</a>
                         </div>
                     </div>
                 </div>

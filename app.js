@@ -215,12 +215,10 @@ app.get('/authentication', (req, res) => {
 
 app.post('/login', (req, res, next) => {
     let formFieldError = {};
-    let formError = {};
+    let formError = new Array();
     let email = req.body.email;
     let password = req.body.password;
     let loggedInUser = {};
-    var session;
-
     // Form fields validation
     if (email === "") {
         formFieldError["email"] = "Email is a required field";
@@ -232,11 +230,8 @@ app.post('/login', (req, res, next) => {
 
     // Check for user having email and correct password. 
     let sql = "select * from user where email=? and password=?";
-    console.log(sql);
     con.query(sql, [email, password], function (err, result) {
         if (!err && result.length > 0) {
-            console.log(result);
-
             loggedInUser.id = result[0].id;
             loggedInUser.name = result[0].name;
             loggedInUser.email = result[0].email;
@@ -251,12 +246,19 @@ app.post('/login', (req, res, next) => {
             req.session.userId = loggedInUser.id;
 
             res.redirect("/dashboard");
-        } else {
-            console.log("error is", err);
-            res.render('authentication/authentication', { error: err });
+        } else if (result.length == 0) {
+            formError.push("Invalid username or password");
+            res.render('authentication/authentication', { formError: formError, formFieldError: formFieldError });
         }
 
     });
+});
+
+app.get('/login', (req, res) => {
+    if (req.session.userId) {
+        res.redirect('/dashboard');
+    }
+    res.render("authentication/authentication");
 });
 
 app.post('/logout', (req, res, next) => {
@@ -274,7 +276,7 @@ app.post('/logout', (req, res, next) => {
 app.post('/register', (req, res, next) => {
     let error = {}
     error["registrationFormError"] = new Array();
-    error["registerFormFieldError"] = {};
+    error["registerFormFieldError"] = new Array();
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
@@ -283,28 +285,35 @@ app.post('/register', (req, res, next) => {
 
 
     if (name == "") {
-        error["registerFormFieldError"]["name"] = "Name is required";
+        error["registerFormFieldError"].push("Name is required");
     }
     if (email == "") {
-        error["registerFormFieldError"]["email"] = "Email is required";
+        error["registerFormFieldError"].push("Email is required");
     }
     if (password == "") {
-        error["registerFormFieldError"]["password"] = "Password is required";
+        error["registerFormFieldError"].push("Password is required");
     }
 
+    ;
 
 
     if (error["registerFormFieldError"].length > 0) {
         res.render("authentication/authentication", { error: error });
     } else {
         console.log(name, email, password);
-        let dbUser = con.query("select * from user where email=?", [email], function (err, result) {
+        con.query("select * from user where email=?", [email], function (err, result) {
             if (err) {
 
                 error["registrationFormError"].push(err);
-                console.log(err, "Error is");
                 res.render("authentication/authentication", { error: error });
-            } else { // User don't exist create new user. 
+            } else if (result.length >= 0) {
+                console.log(result)
+                //user exist show validation error. 
+                error["registrationFormError"].push(`User having email ${email} already exist`);
+                res.render("authentication/authentication", { error: error });
+            } else {
+
+                // user don't exist insert.
 
                 let userFields = [
                     [name, email, password]
@@ -314,10 +323,7 @@ app.post('/register', (req, res, next) => {
                 con.query(sql, [userFields], function (err, result) {
 
                     if (!err) {
-                        console.log(result);
-                        newUser.name = result[0].name;
-                        newUser.email = result[0].email;
-                        newUser.id = result[0].id;
+                        newUser.id = result[0].insertId;
 
                         req.session.user = newUser;
                         res.redirect("/dashboard");
