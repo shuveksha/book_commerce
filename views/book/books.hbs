@@ -7,8 +7,7 @@
         {{#each books}}
         <div class="col-md-3 col-sm-12">
             <div class="card" style="width: 18rem;">
-                <img src="https://media.thuprai.com/__sized__/front_covers/Phulange_by_Lekh_Nath_Chhetri-thumbnail-280x405-70.jpg"
-                    class="card-img-top" alt="...">
+                <img src="{{this.thumbnail}}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <p class="card-text fs-5">{{title}}</p>
                     <p><a class="btn btn-dark" href="/book/{{id}}/{{title}}">Browse</a></p>

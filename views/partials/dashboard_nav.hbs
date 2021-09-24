@@ -47,29 +47,38 @@
 
                         <a class="nav-link active" aria-current="page" href="/dashboard">
                             <span data-feather="home"></span>
-                            Admin Dashboard
+                            {{#if session.user.isAdmin}} Admin Dashboard {{else}} User Dashboard {{/if}}
                         </a>
                     </li>
 
+
+                    {{#if session.user.isAdmin}}
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard/books">
                             <span data-feather="shopping-cart"></span>
                             Books
                         </a>
                     </li>
+                    {{/if}}
+
+                    {{# if session.user.isAdmin}}
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard/publisher">
                             <span data-feather="users"></span>
                             Publishers
                         </a>
                     </li>
+                    {{/if}}
 
+
+                    {{#if session.user.isAdmin}}
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard/genres">
                             <span data-feather="users"></span>
                             Genres
                         </a>
                     </li>
+                    {{/if}}
 
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard/cart/checkout" <span data-feather="bar-chart-2"></span>
@@ -77,7 +86,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/dashboard/user/orders">
                             <span data-feather="layers"></span>
                             My orders
                         </a>

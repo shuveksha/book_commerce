@@ -1,0 +1,21 @@
+{{> dashboard_nav}}
+<h2 class="fs-5">Your order history</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">InvoiceNo</th>
+            <th scope="col">Order Date</th>
+            <th scope="col">Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each orders}}
+        <tr>
+            <td>#ord1{{id}}</td>
+            <td>{{order_date}}</td>
+            <td><a class="btn btn-sm btn-primary" href="/dashboard/order/detail/{{id}}">Order Detail</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{dashboard_footer}}

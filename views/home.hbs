@@ -5,8 +5,7 @@
     <div class="owl-carousel owl-theme">
         {{#each newRelease}}
         <div class="card item" style="width: 14rem;">
-            <img src="https://media.thuprai.com/__sized__/front_covers/Nritakshar_bigyan-thumbnail-280x405-70.jpg"
-                class="card-img-top" alt="{{title}}">
+            <img src="{{this.thumbnail}}" class="card-img-top" alt="{{title}}">
             <div class="card-body">
                 <h2 class="text-left fs-6">{{title}}</h2>
                 <a href="/book/{{id}}/{{title}}" class="btn btn-dark">Browse</a>
@@ -21,11 +20,10 @@
     <div class="owl-carousel owl-theme">
         {{#each bestSelling}}
         <div class="card item" style="width: 14rem;">
-            <img src="https://media.thuprai.com/__sized__/front_covers/Nritakshar_bigyan-thumbnail-280x405-70.jpg"
-                class="card-img-top" alt="{{title}}">
+            <img src="{{this.thumbnail}}" class="card-img-top" alt="{{title}}">
             <div class="card-body">
                 <h2 class="text-left fs-6">{{title}}</h2>
-                <a href="/book/{{id}}" class="btn btn-dark">Browse</a>
+                <a href="/book/{{id}}/{{title}}" class="btn btn-dark">Browse</a>
             </div>
         </div>
         {{/each}}
@@ -37,8 +35,7 @@
     <div class="owl-carousel owl-theme mb-5">
         {{#each ebooks}}
         <div class="card item" style="width: 14rem;">
-            <img src="https://media.thuprai.com/__sized__/front_covers/Nritakshar_bigyan-thumbnail-280x405-70.jpg"
-                class="card-img-top" alt="{{title}}">
+            <img src="{{thumbnail}}" class="card-img-top" alt="{{title}}">
             <div class="card-body">
                 <h2 class="text-left fs-6">{{title}}</h2>
                 <a href="/book/{{id}}" class="btn btn-dark">Browse</a>

@@ -1,0 +1,66 @@
+{{>dashboard_nav}}
+
+
+<dir class="row">
+    <div class="col-md-6 col-sm-12">
+        <div class="card">
+            <h5 class="card-header">Order Details</h5>
+            <div class="card-body">
+
+                <p>Order No: #ord{{order.id}}</p>
+                <p>Order Date:{{order.order_date}}</p>
+
+                <hr>
+                <h5 class="fs-5">Ordered Items</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Item
+                            <th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each items }}
+                        <tr>
+                            <td>{{title}}</td>
+                            <td>{{ordered_price}}</td>
+                            <td>{{ordered_quantity}}</td>
+                        </tr>
+                        {{/each}}
+                        <tr>
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{totalPrice}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                Shipping Details
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Full Name: &nbsp; {{shippingAddress.full_name}}</li>
+                    <li class="list-group-item">Email: &nbsp; {{shippingAddress.email}}</li>
+                    <li class="list-group-item">Phone: &nbsp; {{shippingAddress.phone}}</li>
+                    <li class="list-group-item">Street Address: &nbsp; {{shippingAddress.street_address}}</li>
+                    <li class="list-group-item">City: &nbsp; {{shippingAddress.city}}</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</dir>
+
+{{shippingAddress}}
+
+{{>dashboard_footer}}

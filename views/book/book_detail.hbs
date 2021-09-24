@@ -5,8 +5,7 @@
             <div class="col-md-3 col-sm-12">
 
                 <div class="card" style="width: 18rem;">
-                    <img src="https://media.thuprai.com/__sized__/products/9789937874021-thumbnail-280x405-70.jpg   "
-                        class="card-img-top" alt="...">
+                    <img src="{{book.thumbnail}}" class="card-img-top" alt="...">
                     <div class="card-body">
 
                         <div><span class="fs-4">Publisher:</span> Ratna Pustak Bhandar
@@ -103,15 +102,12 @@
 
 
                 <div class="owl-carousel owl-theme">
-
-
-                    {{#each items}}
+                    {{#each relatedBooks}}
                     <div class="card item" style="width: 10rem;">
-                        <img src="https://media.thuprai.com/__sized__/front_covers/Nritakshar_bigyan-thumbnail-280x405-70.jpg"
-                            class="card-img-top" alt="...">
+                        <img src="{{this.thumbnail}}" class="card-img-top" alt="{{this.title}}">
                         <div class="card-body">
-                            <h2 class="fs-6">Nepolean Bonapart</h2>
-                            <a href="#" class="btn btn-success text-left">Add to cart</a>
+                            <h2 class="fs-6 text-left">{{this.title}}</h2>
+                            <a href="/cart/add/{{this.id}}" class="btn btn-success text-left">Add to cart</a>
                         </div>
                     </div>
                     {{/each}}

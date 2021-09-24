@@ -54,7 +54,13 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
     resave: false
-}))
+}));
+
+// passing session variable to all templates. 
+app.use(function (req, res, next) {
+    res.locals.session = req.session;
+    next();
+});
 
 // Use cookie parser  to parse browser cookie. 
 app.use(cookieParser());
@@ -164,6 +170,8 @@ app.get('/book/:id/:title/', (req, res) => {
 
         book = result[0];
 
+        let bookGenreId = result[0].genre_id;
+
         if (book.new_release == "1") {
             book.new_release = "Yes";
         } else {
@@ -176,11 +184,23 @@ app.get('/book/:id/:title/', (req, res) => {
             book.best_selling = "No";
         }
 
-        let items = [1, 2, 3, 4]
-        res.render('book/book_detail', {
-            book: book,
-            items: items
-        });
+
+        con.query("select * from book where genre_id=?", [bookGenreId], function (err, relatedBooks) {
+
+            if (err) {
+                relatedBooks = [];
+            }
+
+            if (relatedBooks.length <= 0) {
+                relatedBooks = [];
+            }
+
+            res.render('book/book_detail', {
+                book: book,
+                relatedBooks: relatedBooks
+            });
+        })
+
 
     });
 });
@@ -220,7 +240,11 @@ app.post('/login', (req, res, next) => {
             loggedInUser.id = result[0].id;
             loggedInUser.name = result[0].name;
             loggedInUser.email = result[0].email;
-            loggedInUser.user_type = result[0].user_type;
+            if (result[0].user_type == "admin") {
+                loggedInUser.isAdmin = true;
+            } else {
+                loggedInUser.isAdmin = false;
+            }
 
             // set session key.
             req.session.user = loggedInUser;
@@ -900,7 +924,94 @@ app.get('/dashboard/cart/checkout', function (req, res) {
 });
 
 // Process order. 
-app.get('/dashboard/cart/checkout/order', function (req, res) {
+app.post('/dashboard/cart/checkout/order', function (req, res) {
+    if (req.session.userId) {
+        res.redirect('/authentication');
+    }
+
+    let userId = req.session.userId;
+
+    let full_name = req.body.fullname || "";
+    let email = req.body.email || "";
+    let phone = req.body.phone || "";
+    let street_address = req.body.street_address || "";
+    let city = req.body.city || "";
+
+    // if (!full_name || !email || !phone || !street_address) {
+    //     res.send("Please fill the shipping details completly");
+    // }
+
+    let sql = "select cart.*, book.price as price from cart inner join book on cart.product_id=book.id where user_id=?";
+    con.query(sql, [userId], function (err, cartItems) {
+
+
+        if (err) {
+            res.send("Error on fetching cart")
+        }
+
+        if (cartItems.length <= 0) {
+            res.send("Your cart is empty");
+        }
+
+
+        // create an order and invoice. 
+        let shippingSql = "insert into shipping_address(full_name, email, phone, street_address, city) values(?)";
+        let shippingTableColumn = [full_name, email, phone, street_address, city];
+
+        con.query(shippingSql, [shippingTableColumn], function (err, shippingInsertResult) {
+            if (err) {
+                res.send("Server error on inserting shipping address");
+            }
+
+            let shippingId = shippingInsertResult.insertId;
+
+            // create order.
+            let createOrderSql = "insert into user_order(user_id, shipping_address_id, total_quantity, total_price) values(?)";
+            let createOrderColumns = [req.session.userId, shippingId, 0, 0];
+            con.query(createOrderSql, [createOrderColumns], function (err, result) {
+                if (err) {
+                    res.send("error on creating orders");
+                }
+                let orderId = result.insertId;
+                // insert items from cart to ordered items. 
+                let insertOrderItemSql = "insert into ordered_items(user_order_id, product_id, ordered_price, ordered_quantity) values(?)";
+                "insert into ordered_items(user_order_id, product_id, ordered_price, ordered_quantity)  "
+
+                let insertSql = "insert into ordered_items(product_id, ordered_price, ordered_quantity, user_order_id) select cart.product_id, book.price, cart.quantity, ? from cart inner join book on cart.product_id=book.id where cart.user_id=?";
+                // let insertOrderItemColumn = new Array();
+
+                // // multiple values. 
+                // cartItems.forEach(item => {
+                //     insertOrderItemColumn.push(orderId);
+                //     insertOrderItemColumn.push(item.product_id);
+                //     insertOrderItemColumn.push(item.price);
+                //     insertOrderItemColumn.push(item.quantity);
+
+                // });
+
+                // insert items from cart to orderedItems.
+                con.query(insertSql, [orderId, req.session.userId], function (err, result) {
+
+                    if (err) {
+                        console.log("Error while adding items form cart to ordereditems");
+                    }
+
+                    if (result) {
+                        // delete items from cart 
+                        con.query("delete from cart where user_id=?", [req.session.userId], function (err, result) {
+                            if (!err) {
+                                res.render('dashboard/order_detail')
+                            }
+                        });
+                    }
+
+
+                });
+
+            });
+
+        });
+    });
 
 });
 // add to cart  get
@@ -931,6 +1042,111 @@ app.get('/cart/add/:productId/', function (req, res) {
             product: result[0]
         });
 
+    });
+});
+
+
+app.get('/dashboard/user/orders/', function (req, res) {
+    if (!req.session.userId) {
+        res.redirect('/authentication');
+    }
+
+
+
+    let userOrderSql = "select * from user_order where user_id=?";
+
+    con.query(userOrderSql, [req.session.userId], function (err, result) {
+        if (err) {
+            res.send("Server error while fetching userOrder");
+        }
+        if (result.length <= 0) {
+
+            res.send("No orders found");
+        }
+
+        res.render('dashboard/order_list', {
+            orders: result
+        });
+
+
+
+    });
+
+
+});
+
+app.get('/dashboard/order/detail/:orderId', function (req, res) {
+    if (!req.session.userId) {
+        res.redirect('/authentication');
+    }
+    let orderId = req.params.orderId;
+    if (!orderId) {
+        res.send("Invalid orderId");
+    }
+
+    let sqlOrderDetail = "select book.title, ordered_price, ordered_quantity, (ordered_quantity * ordered_price) as subtotal from ordered_items inner join user_order on ordered_items.user_order_id=user_order.id inner join book on ordered_items.product_id=book.id where user_order.user_id =? and user_order.id =?";
+
+    // order detail. 
+    con.query("select * from user_order where user_id=? and id=?", [req.session.userId, orderId], function (err, orderDetail) {
+        if (err) {
+            res.send("Error on fetching order");
+        }
+
+        if (orderDetail.length <= 0) {
+            res.send("No order found")
+        }
+
+        let order_detail = orderDetail[0];
+
+
+        // fetch order details having order.id  
+        con.query(sqlOrderDetail, [req.session.userId, orderId], function (err, order_items) {
+            if (err) {
+                res.send(`Error on fetching order items  having order id ${orderId}`);
+
+            }
+
+            if (order_items.length < 0) {
+                res.send(`No items found in order ${orderId}`);
+            }
+
+
+
+
+            // fetching shipping address. 
+            let sqlShippingdetail = "select * from shipping_address where id=?";
+
+
+
+            con.query(sqlShippingdetail, [1], function (err, shippingAddress) {
+                if (err) {
+                    res.send("Error on fetching shipping details.");
+                }
+
+                if (shippingAddress.length <= 0) {
+                    res.send("No shipping details found");
+                }
+
+                console.log(order_detail, "order detail");
+
+                // calculate total quantity and total price
+                let totalPrice = 0;
+                order_items.forEach(item => {
+                    totalPrice += item.subtotal;
+
+                });
+
+
+                // render order detail page. 
+                res.render("dashboard/order_detail", {
+                    order: order_detail || "",
+                    items: order_items || "",
+                    shippingAddress: shippingAddress[0] || "",
+                    totalPrice: totalPrice
+                });
+            });
+
+        });
     });
 });
 
