@@ -35,7 +35,9 @@
                 </tr>
             </tfoot>
         </table>
+        {{#if items}}
         <a href="" data-bs-toggle="modal" data-bs-target="#checkOutModal" class="btn btn-dark btn-sm">Checkout</a>
+        {{/if}}
     </div>
 </div>
 
@@ -45,7 +47,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Order Confirmation</h5>
+                {{#if items}}
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                {{/if}}
             </div>
 
 
@@ -55,26 +59,26 @@
                 <form method="POST" action="/dashboard/cart/checkout/order">
                     <div class="mb-3">
                         <label for="full_name" class="form-label">Full Name</label>
-                        <input type="full_name" name="full_name" class="form-control" id="full_name">
+                        <input type="full_name" required name="full_name" class="form-control" id="full_name">
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" id="email">
+                        <input type="email" name="email" required class="form-control" id="email">
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone</label>
-                        <input type="phone" name="phone" class="form-control" id="phone">
+                        <input type="phone" name="phone" required class="form-control" id="phone">
 
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Street Address</label>
-                        <input type="text" name="street_address" class="form-control" id="street_address">
+                        <input type="text" name="street_address" required class="form-control" id="street_address">
                     </div>
 
                     <div class="mb-3">
                         <label for="city" class="form-label">City</label>
-                        <input type="text" class="form-control" id="email">
+                        <input type="text" name="city" class="form-control" required id="email">
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Order confirm</button>

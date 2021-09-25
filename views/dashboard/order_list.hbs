@@ -1,5 +1,7 @@
 {{> dashboard_nav}}
 <h2 class="fs-5">Your order history</h2>
+{{#if orders}}
+
 <table class="table">
     <thead>
         <tr>
@@ -18,4 +20,10 @@
         {{/each}}
     </tbody>
 </table>
+{{else}}
+<div class="alert alert-danger" role="alert">
+    No orders found, keep shopping
+</div>
+
+{{/if}}
 {{dashboard_footer}}

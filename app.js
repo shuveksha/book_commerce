@@ -1,5 +1,4 @@
 
-
 const express = require('express');
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
@@ -108,8 +107,6 @@ app.get('/', (req, res) => {
 
         });
 
-
-
     });
 
 });
@@ -166,6 +163,7 @@ app.get('/book/:id/:title/', (req, res) => {
         }
         if (result.length <= 0) {
             res.send("No book found")
+            return;
         }
 
         book = result[0];
@@ -215,12 +213,10 @@ app.get('/authentication', (req, res) => {
 
 app.post('/login', (req, res, next) => {
     let formFieldError = {};
-    let formError = {};
+    let formError = new Array();
     let email = req.body.email;
     let password = req.body.password;
     let loggedInUser = {};
-    var session;
-
     // Form fields validation
     if (email === "") {
         formFieldError["email"] = "Email is a required field";
@@ -232,11 +228,8 @@ app.post('/login', (req, res, next) => {
 
     // Check for user having email and correct password. 
     let sql = "select * from user where email=? and password=?";
-    console.log(sql);
     con.query(sql, [email, password], function (err, result) {
         if (!err && result.length > 0) {
-            console.log(result);
-
             loggedInUser.id = result[0].id;
             loggedInUser.name = result[0].name;
             loggedInUser.email = result[0].email;
@@ -251,21 +244,24 @@ app.post('/login', (req, res, next) => {
             req.session.userId = loggedInUser.id;
 
             res.redirect("/dashboard");
-        } else {
-            console.log("error is", err);
-            res.render('authentication/authentication', { error: err });
+        } else if (result.length == 0) {
+            formError.push("Invalid username or password");
+            res.render('authentication/authentication', { formError: formError, formFieldError: formFieldError });
         }
 
     });
 });
 
+app.get('/login', (req, res) => {
+    if (req.session.userId) {
+        res.redirect('/dashboard');
+    }
+    res.render("authentication/authentication");
+});
+
 app.post('/logout', (req, res, next) => {
     // destroy the session
-    console.log(req.body.logout);
-
-
     if (req.body.logout) {
-        console.log("Logout request accepted inside if");
         req.session.user = null;
         res.redirect('/authentication');
     }
@@ -274,37 +270,42 @@ app.post('/logout', (req, res, next) => {
 app.post('/register', (req, res, next) => {
     let error = {}
     error["registrationFormError"] = new Array();
-    error["registerFormFieldError"] = {};
+    error["registerFormFieldError"] = new Array();
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
     let newUser = {};
 
 
-
     if (name == "") {
-        error["registerFormFieldError"]["name"] = "Name is required";
+        error["registerFormFieldError"].push("Name is required");
     }
     if (email == "") {
-        error["registerFormFieldError"]["email"] = "Email is required";
+        error["registerFormFieldError"].push("Email is required");
     }
     if (password == "") {
-        error["registerFormFieldError"]["password"] = "Password is required";
+        error["registerFormFieldError"].push("Password is required");
     }
-
 
 
     if (error["registerFormFieldError"].length > 0) {
         res.render("authentication/authentication", { error: error });
     } else {
-        console.log(name, email, password);
-        let dbUser = con.query("select * from user where email=?", [email], function (err, result) {
+        con.query("select * from user where email=?", [email], function (err, result) {
+
+            console.log(result);
             if (err) {
 
                 error["registrationFormError"].push(err);
-                console.log(err, "Error is");
                 res.render("authentication/authentication", { error: error });
-            } else { // User don't exist create new user. 
+            } else if (result.length > 0) {
+
+                //user exist show validation error. 
+                error["registrationFormError"].push(`User having email ${email} already exist`);
+                res.render("authentication/authentication", { error: error });
+            } else {
+
+                // user don't exist insert.
 
                 let userFields = [
                     [name, email, password]
@@ -314,13 +315,13 @@ app.post('/register', (req, res, next) => {
                 con.query(sql, [userFields], function (err, result) {
 
                     if (!err) {
-                        console.log(result);
-                        newUser.name = result[0].name;
-                        newUser.email = result[0].email;
-                        newUser.id = result[0].id;
+                        newUser.id = result.insertId;
 
                         req.session.user = newUser;
-                        res.redirect("/dashboard");
+                        // req.session.userId = result.insertId;
+                        res.render("authentication/authentication", {
+                            signupMessage: "User created successfully, please login"
+                        });
 
                     } else {
                         error["registrationFormError"].push(err);
@@ -333,15 +334,14 @@ app.post('/register', (req, res, next) => {
         });
     }
 });
-// app.use("/api/books", books);
 
+// app.use("/api/books", books);
 // app.use("/api/publishers", publishers);
 // app.use("/api/genres", genres);
 // app.use("/api/languages", languages);
 // app.use("/api/authors", authors);
 
 app.get('/dashboard', (req, res) => {
-
     // If user not logged in redirect to login page
     if (!req.session.userId) {
         res.redirect('/authentication');
@@ -432,8 +432,6 @@ app.post('/dashboard/book/add', function (req, res) {
                 res.send("Error in parsing form");
             }
 
-
-
             let title = fields['title'] || "";
             let description = fields['description'] || "";
             let price = fields["price"] || "";
@@ -460,6 +458,7 @@ app.post('/dashboard/book/add', function (req, res) {
                 if (err) {
 
                     res.send("File uploading error thumbnail");
+                    return;
                 }
 
             });
@@ -467,6 +466,7 @@ app.post('/dashboard/book/add', function (req, res) {
             fs.rename(url_path, url_db_path, function (err) {
                 if (err) {
                     res.send("File uploading error doc");
+                    return;
                 }
 
             });
@@ -493,6 +493,7 @@ app.post('/dashboard/book/add', function (req, res) {
             con.query(insertBookSql, [columns], function (err, result) {
                 if (!err) {
                     res.send("Book Added successfully");
+                    return;
                 } else {
                     console.log(err);
                 }
@@ -504,6 +505,7 @@ app.post('/dashboard/book/add', function (req, res) {
                     message: "There was an error parsing the files",
                     error: err,
                 });
+                return;
             }
         });
     }
@@ -521,6 +523,7 @@ app.get('/dashboard/book/update/:id/:title/', function (req, res) {
         let book = {};
         if (err) {
             res.send("Server error occurred while fetching book");
+            return;
         }
 
         book.title = result[0].title || "";
@@ -552,6 +555,7 @@ app.get('/dashboard/book/update/:id/:title/', function (req, res) {
         con.query("select * from publisher", function (err, result) {
             if (err) {
                 res.send("Error occurred while fetching publisher");
+                return;
             }
             let publishers = result;
 
@@ -559,6 +563,7 @@ app.get('/dashboard/book/update/:id/:title/', function (req, res) {
             con.query("select * from genre", function (err, result) {
                 if (err) {
                     res.send("Error occurred while fetching genres");
+                    return;
                 }
                 let genres = result;
 
@@ -584,10 +589,10 @@ app.get('/dashboard/book/delete/:id/:title/', function (req, res) {
 
     if (!id || !title) {
         res.send("Not a valid book id");
+        return;
     }
 
     res.render("dashboard/book_delete", { title: title, book_id: id });
-
 
 });
 
@@ -598,6 +603,7 @@ app.post('/dashboard/book/delete/', function (req, res) {
     con.query(sql, [id], function (err, result) {
         if (err) {
             res.send("Server error on deleting book with Id ${id");
+            return;
         }
         console.log(result);
         res.redirect("/dashboard/books");
@@ -621,6 +627,7 @@ app.get('/dashboard/publisher', function (req, res) {
                 });
             } else {
                 res.send("No publishers added");
+                return;
             }
         }
     })
@@ -665,6 +672,7 @@ app.post('/dashboard/publisher/add', function (req, res) {
         } else {
             console.log(err)
             res.send("Server error occoured while adding publisher");
+            return;
         }
 
     });
@@ -690,6 +698,7 @@ app.post('/dashboard/publisher/delete', function (req, res) {
     con.query(sql, [id], function (err, result) {
         if (err) {
             res.send("Error in deleting ${deleteSql}");
+            return;
         }
         res.redirect('/dashboard/publisher');
     });
@@ -702,6 +711,7 @@ app.get('/dashboard/publisher/update', function (req, res) {
     con.query("select * from publisher where id=?", [publisherID], function (err, result) {
         if (err) {
             res.send("Server error occoured");
+            return;
         }
         publisher.name = result[0].name;
         publisher.description = result[0].description;
@@ -733,8 +743,6 @@ app.post('/dashboard/publisher/update', function (req, res) {
     let id = req.body.id;
     console.log(description);
 
-
-
     let sql = "update  publisher set name=?, description=?, phone=?, email=? where id=?";
     let columns = [name, description, phone, email, id]
 
@@ -746,6 +754,7 @@ app.post('/dashboard/publisher/update', function (req, res) {
         } else {
             console.log(err)
             res.send("Server error while updating book ${title}");
+            return;
         }
 
     });
@@ -768,6 +777,7 @@ app.get('/dashboard/genres', function (req, res) {
                 });
             } else {
                 res.send("No genres found");
+                return;
             }
         }
     })
@@ -799,6 +809,7 @@ app.post('/dashboard/genre/add', function (req, res) {
     con.query(sql, [columns], function (err, result) {
         if (err) {
             res.send("Server error on adding genre");
+            return;
         }
         res.redirect('/dashboard/genres');
 
@@ -816,7 +827,9 @@ app.get('/dashboard/genre/update', function (req, res) {
     con.query("select * from genre where id=?", [genreId], function (err, result) {
         if (err) {
             res.send("Server error occoured while fetching genre");
+            return;
         }
+
         genre.genre = result[0].genre;
         genre.description = result[0].description;
         genre.id = result[0].id;
@@ -849,6 +862,7 @@ app.post('/dashboard/genre/update', function (req, res) {
             res.redirect("/dashboard/genres");
         } else {
             res.send("Server error while updating genre ${genre}");
+            return;
         }
     });
 });
@@ -873,6 +887,7 @@ app.post('/dashboard/genre/delete', function (req, res) {
     con.query(sql, [id], function (err, result) {
         if (err) {
             res.send("Error in deleting ${deleteSql}");
+            return;
         }
         res.redirect('/dashboard/genres');
     });
@@ -893,13 +908,14 @@ app.get('/dashboard/cart/checkout', function (req, res) {
     con.query(sql, [userId], function (err, result) {
         if (err) {
             res.send("Error fetching user cart");
+            return;
         }
         if (result.length <= 0) {
             cart_message = "Your cart is empty";
 
         }
 
-        if (result.length >= 1) {
+        if (result.length >= 0) {
             total_item = result.length;
             cart_message = `You have total ${total_item} item in your cart`;
 
@@ -929,17 +945,20 @@ app.post('/dashboard/cart/checkout/order', function (req, res) {
         res.redirect('/authentication');
     }
 
+
+
     let userId = req.session.userId;
 
-    let full_name = req.body.fullname || "";
+    let full_name = req.body.full_name || "";
     let email = req.body.email || "";
     let phone = req.body.phone || "";
     let street_address = req.body.street_address || "";
     let city = req.body.city || "";
 
-    // if (!full_name || !email || !phone || !street_address) {
-    //     res.send("Please fill the shipping details completly");
-    // }
+    if (!full_name || !email || !phone || !street_address) {
+        res.send("Please fill the shipping details completly");
+    }
+
 
     let sql = "select cart.*, book.price as price from cart inner join book on cart.product_id=book.id where user_id=?";
     con.query(sql, [userId], function (err, cartItems) {
@@ -947,70 +966,84 @@ app.post('/dashboard/cart/checkout/order', function (req, res) {
 
         if (err) {
             res.send("Error on fetching cart")
+            return;
         }
 
         if (cartItems.length <= 0) {
             res.send("Your cart is empty");
-        }
+        } else if (cartItems.length >= 1) {
+            // create an order and invoice. 
+            let shippingSql = "insert into shipping_address(full_name, email, phone, street_address, city) values(?)";
+            let shippingTableColumn = [full_name, email, phone, street_address, city];
 
-
-        // create an order and invoice. 
-        let shippingSql = "insert into shipping_address(full_name, email, phone, street_address, city) values(?)";
-        let shippingTableColumn = [full_name, email, phone, street_address, city];
-
-        con.query(shippingSql, [shippingTableColumn], function (err, shippingInsertResult) {
-            if (err) {
-                res.send("Server error on inserting shipping address");
-            }
-
-            let shippingId = shippingInsertResult.insertId;
-
-            // create order.
-            let createOrderSql = "insert into user_order(user_id, shipping_address_id, total_quantity, total_price) values(?)";
-            let createOrderColumns = [req.session.userId, shippingId, 0, 0];
-            con.query(createOrderSql, [createOrderColumns], function (err, result) {
+            con.query(shippingSql, [shippingTableColumn], function (err, shippingInsertResult) {
                 if (err) {
-                    res.send("error on creating orders");
+                    res.send("Server error on inserting shipping address");
+                    return;
                 }
-                let orderId = result.insertId;
-                // insert items from cart to ordered items. 
-                let insertOrderItemSql = "insert into ordered_items(user_order_id, product_id, ordered_price, ordered_quantity) values(?)";
-                "insert into ordered_items(user_order_id, product_id, ordered_price, ordered_quantity)  "
 
-                let insertSql = "insert into ordered_items(product_id, ordered_price, ordered_quantity, user_order_id) select cart.product_id, book.price, cart.quantity, ? from cart inner join book on cart.product_id=book.id where cart.user_id=?";
-                // let insertOrderItemColumn = new Array();
+                let shippingId = shippingInsertResult.insertId;
 
-                // // multiple values. 
-                // cartItems.forEach(item => {
-                //     insertOrderItemColumn.push(orderId);
-                //     insertOrderItemColumn.push(item.product_id);
-                //     insertOrderItemColumn.push(item.price);
-                //     insertOrderItemColumn.push(item.quantity);
 
-                // });
+                // create order.
+                let createOrderSql = "insert into user_order(user_id, shipping_address_id) values(?)";
 
-                // insert items from cart to orderedItems.
-                con.query(insertSql, [orderId, req.session.userId], function (err, result) {
-
+                let createOrderColumns = [req.session.userId, shippingId];
+                con.query(createOrderSql, [createOrderColumns], function (err, result) {
                     if (err) {
-                        console.log("Error while adding items form cart to ordereditems");
+                        res.send("error on creating orders");
+                        return;
                     }
+                    let orderId = result.insertId;
 
-                    if (result) {
-                        // delete items from cart 
-                        con.query("delete from cart where user_id=?", [req.session.userId], function (err, result) {
-                            if (!err) {
-                                res.render('dashboard/order_detail')
-                            }
-                        });
-                    }
 
+
+                    // insert items from cart to ordered items. 
+
+                    let insertSql = "insert into ordered_items(product_id, ordered_price, ordered_quantity, user_order_id) select cart.product_id, book.price, cart.quantity, ? from cart inner join book on cart.product_id=book.id where cart.user_id=?";
+                    // let insertOrderItemColumn = new Array();
+
+                    // // multiple values. 
+                    // cartItems.forEach(item => {
+                    //     insertOrderItemColumn.push(orderId);
+                    //     insertOrderItemColumn.push(item.product_id);
+                    //     insertOrderItemColumn.push(item.price);
+                    //     insertOrderItemColumn.push(item.quantity);
+
+                    // });
+
+                    // insert items from cart to orderedItems.
+                    con.query(insertSql, [orderId, req.session.userId], function (err, result) {
+
+                        if (err) {
+                            console.log("Error while adding items form cart to ordereditems");
+                        }
+
+                        if (result) {
+
+                            console.log("Inserted items into ordered items from cart", result);
+
+
+                            // delete items from cart 
+                            con.query("delete from cart where user_id=?", [req.session.userId], function (err, result) {
+                                if (!err) {
+                                    res.render('dashboard/order_detail')
+                                }
+
+                                if (result) {
+                                    console.log("Delete from cart");
+                                    return;
+                                }
+                            });
+                        }
+
+
+                    });
 
                 });
 
             });
-
-        });
+        }
     });
 
 });
@@ -1027,15 +1060,18 @@ app.get('/cart/add/:productId/', function (req, res) {
     console.log(req.params.productId, "Id is");
     if (!productId) {
         res.send("Product not found while adding in cart");
+        return;
     }
 
     con.query("select * from book where id=?", [productId], function (err, result) {
         if (err) {
             res.send("Error while fetching product");
+            return;
         }
 
         if (result.length <= 0) {
             res.send("Not able to add items in cart");
+            return;
         }
 
         res.render('dashboard/cart_add', {
@@ -1058,10 +1094,11 @@ app.get('/dashboard/user/orders/', function (req, res) {
     con.query(userOrderSql, [req.session.userId], function (err, result) {
         if (err) {
             res.send("Server error while fetching userOrder");
+            return;
         }
         if (result.length <= 0) {
 
-            res.send("No orders found");
+            result = [];
         }
 
         res.render('dashboard/order_list', {
@@ -1075,6 +1112,109 @@ app.get('/dashboard/user/orders/', function (req, res) {
 
 });
 
+app.get('/dashboard/customer/processedOrders', function (req, res) {
+    if (!req.session.userId) {
+        res.redirect('/authentication');
+    }
+
+    let orderStatus = 'processed';
+    let sqlProcessedOrders = "select user_order.*, user.name, user.email from user_order inner join user on user_order.user_id=user.id where user_order.status=?"
+    con.query(sqlProcessedOrders, [orderStatus], function (err, result) {
+        if (!err) {
+            let processedOrders;
+            processedOrders = result;
+            if (result.length <= 0) {
+                processedOrders = false;
+
+            }
+
+            res.render("dashboard/customer_processed_order_list", {
+                processedOrders: processedOrders
+            });
+        }
+    });
+});
+
+app.get('/dashboard/processOrder/:orderId', function (req, res) {
+
+    if (!req.session.userId) {
+        res.redirect('/authentication');
+    }
+
+    if (!req.session.user.isAdmin) {
+        res.send("You are not authorized to process the order");
+        return;
+    }
+
+    let orderId = req.params.orderId || "";
+
+    if (!orderId) {
+        res.send("Invalid order id");
+        return;
+    }
+
+    res.render("dashboard/customerProcessOrder", {
+        orderId: orderId
+    });
+
+
+
+});
+
+
+app.post('/dashboard/processOrder', function (req, res) {
+
+
+    let orderId = req.body.orderId || "";
+
+    if (!orderId) {
+        res.send("Please provide a valid order ID");
+        return;
+    }
+
+
+
+
+    let sqlUpdateOrderStatus = "update user_order set status=? where id=?";
+
+    con.query(sqlUpdateOrderStatus, ['processed', orderId], function (err, result) {
+
+        console.log(err, "error is ");
+        console.log(result, "result is")
+
+        if (!err) {
+            res.redirect('/dashboard/customer/processedOrders');
+        }
+
+        console.log(err);
+    });
+});
+
+app.get('/dashboard/customer/pendingOrders', function (req, res) {
+    if (!req.session.userId) {
+        res.redirect('/authentication');
+    }
+
+    let orderStatus = 'pending';
+    let sqlpendingOrders = "select user_order.*, user.name, user.email from user_order inner join user on user_order.user_id=user.id where user_order.status=?"
+    con.query(sqlpendingOrders, [orderStatus], function (err, result) {
+        if (!err) {
+            let pendingOrders;
+            pendingOrders = result;
+            if (result.length <= 0) {
+                pendingOrders = false;
+
+            }
+
+            console.log(result);
+            res.render("dashboard/customer_pending_order_list", {
+                pendingOrders: pendingOrders
+            });
+        }
+    });
+});
+
+
 app.get('/dashboard/order/detail/:orderId', function (req, res) {
     if (!req.session.userId) {
         res.redirect('/authentication');
@@ -1082,71 +1222,87 @@ app.get('/dashboard/order/detail/:orderId', function (req, res) {
     let orderId = req.params.orderId;
     if (!orderId) {
         res.send("Invalid orderId");
+        return;
     }
 
-    let sqlOrderDetail = "select book.title, ordered_price, ordered_quantity, (ordered_quantity * ordered_price) as subtotal from ordered_items inner join user_order on ordered_items.user_order_id=user_order.id inner join book on ordered_items.product_id=book.id where user_order.user_id =? and user_order.id =?";
 
     // order detail. 
-    con.query("select * from user_order where user_id=? and id=?", [req.session.userId, orderId], function (err, orderDetail) {
+    con.query("select user_order.*, shipping_address.* from user_order inner join shipping_address on user_order.shipping_address_id=shipping_address.id where user_order.user_id=? and user_order.id=?", [req.session.userId, orderId], function (err, orderDetail) {
         if (err) {
             res.send("Error on fetching order");
+            return;
         }
 
-        if (orderDetail.length <= 0) {
-            res.send("No order found")
-        }
+        // query shipping details. 
+        let sqlShippingdetail = "select * from shipping_address where id=?";
 
-        let order_detail = orderDetail[0];
+        if (orderDetail.length > 0) {
 
-
-        // fetch order details having order.id  
-        con.query(sqlOrderDetail, [req.session.userId, orderId], function (err, order_items) {
-            if (err) {
-                res.send(`Error on fetching order items  having order id ${orderId}`);
-
-            }
-
-            if (order_items.length < 0) {
-                res.send(`No items found in order ${orderId}`);
-            }
+            console.log("Order detail is", orderDetail);
+            console.log('----');
 
 
 
-
-            // fetching shipping address. 
-            let sqlShippingdetail = "select * from shipping_address where id=?";
-
-
-
-            con.query(sqlShippingdetail, [1], function (err, shippingAddress) {
+            con.query(sqlShippingdetail, [10], function (err, shippingAddress) {
                 if (err) {
                     res.send("Error on fetching shipping details.");
+                    return;
                 }
+
 
                 if (shippingAddress.length <= 0) {
                     res.send("No shipping details found");
+                    return;
                 }
 
-                console.log(order_detail, "order detail");
 
-                // calculate total quantity and total price
-                let totalPrice = 0;
-                order_items.forEach(item => {
-                    totalPrice += item.subtotal;
+
+
+                // fetch order details having order.id  
+                let sqlOrderItemDetail = "select book.title, ordered_price, ordered_quantity, (ordered_quantity * ordered_price) as subtotal from ordered_items inner join user_order on ordered_items.user_order_id=user_order.id inner join book on ordered_items.product_id=book.id where user_order.user_id =? and user_order.id =?";
+                con.query(sqlOrderItemDetail, [req.session.userId, orderId], function (err, order_items) {
+                    if (!err) {
+
+
+                        if (order_items.length <= 0) {
+                            res.send(`No items found in order ${orderId}`);
+                            return;
+                        }
+
+                        // calculate total quantity and total price
+                        let totalPrice = 0;
+                        order_items.forEach(item => {
+                            totalPrice += item.subtotal;
+
+                        });
+
+                        // render order detail page. 
+                        res.render("dashboard/order_detail", {
+                            order: orderDetail[0] || "",
+                            items: order_items || "",
+                            shippingAddress: shippingAddress[0] || "",
+                            totalPrice: totalPrice
+                        });
+                    }
+                    if (err) {
+                        res.send(`Error on fetching order items  having order id ${orderId}`);
+                        return;
+
+                    }
+
+
 
                 });
 
 
-                // render order detail page. 
-                res.render("dashboard/order_detail", {
-                    order: order_detail || "",
-                    items: order_items || "",
-                    shippingAddress: shippingAddress[0] || "",
-                    totalPrice: totalPrice
-                });
+
             });
 
-        });
+        } else {
+            res.send("Error on fetching order detail");
+            return;
+        }
+
     });
 });
 
@@ -1162,19 +1318,23 @@ app.post('/cart/add', function (req, res) {
 
     if (!productId) {
         res.send("Please order a valid product");
+        return;
     }
 
     if (!quantity || quantity <= 0) {
         res.send("Please input a valid quantity");
+        return;
     }
 
     con.query("select * from book where id=?", [productId], function (err, result) {
         if (err) {
             res.send("Server error while fetching product");
+            return;
         }
 
         if (result.length <= 0) {
             res.send("Product not found in store");
+            return;
         }
 
         product = result[0];
@@ -1186,6 +1346,7 @@ app.post('/cart/add', function (req, res) {
         con.query(sql, [columns], function (err, result) {
             if (err) {
                 res.send("Server error on adding to cart")
+                return;
             }
 
             // On successful redirect to checkout page. 
@@ -1214,12 +1375,14 @@ app.get('/genres', (req, res) => {
                             });
                         } else {
                             res.send("Server side error.    ")
+                            return;
                         }
                     }
                 });
             }
         } else {
             res.sendStatus(500).send("Some server error occoured");
+            return;
         }
     });
 });
@@ -1251,9 +1414,26 @@ app.get('/genres/:genre', function (req, res) {
         } else {
             message = `Server side error occoured`;
             res.send(`Genre ${genre} not found`, { message: message });
+            return;
         }
     });
 
+
+});
+
+/* search */
+app.get('/search', function (req, res) {
+    let search_query = req.query.search_query
+
+    let sql_search_query = "select * from book where title like ?";
+    con.query(sql_search_query, ['%' + search_query + '%'], function (err, result) {
+
+        res.render('search', {
+            books: result,
+            searchQuery: search_query
+        });
+
+    });
 
 });
 

@@ -5,7 +5,7 @@
                 href="/dashboard/book/add">Add new Book</a></div>
     </div>
 </div>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -16,7 +16,7 @@
             <th scope="col">isbn</th>
             <th scope="col">New Release</th>
             <th scope="col">Best Selling</th>
-            <th scope="col">Browse</th>
+            <th scope="col">Details</th>
             <th scope="col">Delete</th>
             <th scope="col">Update</th>
         </tr>
@@ -25,14 +25,14 @@
         {{#each books}}
         <tr>
             <th scope="row">{{@key }}</th>
-            <td><img src="{{thumbnail}}" /></td>
+            <td><img class="img-fluid" width="50px" height="50px" src="{{thumbnail}}" /></td>
             <td>{{title}}</td>
             <td>{{price}}</td>
             <td>{{pages}}</td>
             <td>{{isbn}}</td>
             <td>{{#if new_release}} Yes {{else}} No {{/if}}</td>
             <td>{{#if best_selling}} Yes {{else}} No {{/if}}</td>
-            <td><a class="btn btn-sm btn-primary" href="/book/{{id}}/{{title}}">Browse</a>
+            <td><a class="btn btn-sm btn-secondary" href="/book/{{id}}/{{title}}">Details</a>
             </td>
             <td><a class="btn btn-sm btn-danger" href="/dashboard/book/delete/{{id}}/{{title}}">Delete</a>
             </td>

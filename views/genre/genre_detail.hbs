@@ -19,11 +19,11 @@
         {{#each books}}
         <div class="col-md-3">
             <div class="card" style="width: 14rem;">
-                <img src="{{url}}" class="card-img-top" alt="{{title}}">
+                <img src="{{thumbnail}}" class="card-img-top" alt="{{title}}">
                 <div class="card-body">
                     <h5 class="card-title">{{title}}</h5>
-                    <p class="card-text">{{description}}</p>
-                    <a href="/book/{{id}}" class="btn btn-primary">Browse</a>
+                    <p class="card-text">{{publisher_name}}</p>
+                    <a href="/book/{{id}}/{{title}}" class="btn btn-dark">Browse</a>
                 </div>
             </div>
         </div>

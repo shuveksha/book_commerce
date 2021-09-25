@@ -8,11 +8,19 @@
                     <img src="{{book.thumbnail}}" class="card-img-top" alt="...">
                     <div class="card-body">
 
-                        <div><span class="fs-4">Publisher:</span> Ratna Pustak Bhandar
-                            <hr>
-
+                        <div><span class="fs-5">Publisher:</span> <span class="fs-6">{{book.publisher_name}}
+                            </span>
+                        </div>
+                        <div><span class="fs-5">Price:</span> <span class="fs-6">{{book.price}}
+                            </span>
+                        </div>
+                        <div><span class="fs-5">Pages:</span> <span class="fs-6">{{book.pages}}
+                            </span>
                         </div>
 
+                        <div><span class="fs-5">Genre:</span> <span class="fs-6">{{book.genre}}
+                            </span>
+                        </div>
 
                     </div>
                 </div>
@@ -25,12 +33,12 @@
 
                 <div class="card text-center">
                     <div class="card-header text-start text-uppercase">
-                        product Details
+                        Book Details
                     </div>
                     <div class="card-body" style="text-align:left">
                         <h5 class="card-title fs-4">{{book.title}}
                         </h5>
-                        <p class="fs-6">By: Kumar Nagarkoti</p>
+
                         <h5 class="fs-5">Description:</h5>
                         <p class="cart-text">{{book.description}}</p>
 
@@ -41,8 +49,7 @@
 
                                 <div class="card-body">
                                     <h5 class="card-title text-dark fs-5">Price: {{book.price}}</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional
-                                        content.</p>
+
                                     <a href="/cart/add/{{book.id}}" class=" btn btn-dark">Add to cart</a>
                                     <a href="{{book.url}}" class=" btn btn-outline-dark">Read online</a>
                                 </div>
@@ -107,7 +114,7 @@
                         <img src="{{this.thumbnail}}" class="card-img-top" alt="{{this.title}}">
                         <div class="card-body">
                             <h2 class="fs-6 text-left">{{this.title}}</h2>
-                            <a href="/cart/add/{{this.id}}" class="btn btn-success text-left">Add to cart</a>
+                            <a href="/cart/add/{{this.id}}" class="btn btn-secondary text-left">Add to cart</a>
                         </div>
                     </div>
                     {{/each}}
@@ -118,5 +125,5 @@
         </div>
     </div>
 </div>
-
+<hr>
 {{> footer}}

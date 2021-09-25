@@ -17,13 +17,10 @@
                         Categories
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/browse/books/ebook">E-books</a></li>
+                        {{!-- <li><a class="dropdown-item" href="/browse/books/ebook">E-books</a></li> --}}
                         <li><a class="dropdown-item" href="/browse/books/audio">Audio Books</a></li>
                         <li><a class="dropdown-item" href="/browse/books/paperback">PaperBack</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="/genres">Browse Book Author</a></li>
+
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -70,8 +67,9 @@
 
 
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form method="GET" action="/search" class="d-flex">
+                <input name="search_query" class="form-control me-2" type="search" placeholder="Search"
+                    aria-label="Search">
                 <button class="btn btn-outline-success mr-3" type="submit">Search</button>
             </form>
 
