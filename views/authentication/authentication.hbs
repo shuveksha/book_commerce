@@ -31,6 +31,12 @@
         <div class="col-md-6 col-sm-12">
             <h2 class="fs-4">or Register</h2>
 
+            {{#if signupMessage}}
+            <div class="alert alert-success" role="alert">
+                <p>{{signupMessage}}</p>
+            </div>
+            {{/if}}
+
             <!-- form error lists -->
             {{#if error.registrationFormError}}
             <div class="alert alert-danger" role="alert">

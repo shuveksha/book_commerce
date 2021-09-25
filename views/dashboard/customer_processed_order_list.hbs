@@ -1,0 +1,39 @@
+{{> dashboard_nav}}
+
+<div class="container">
+    <div class="row">
+
+        <h5 class="fs-5">Customer processed orders</h5>
+        {{#if processedOrders }}
+        <table class="table stripped-table">
+            <thead>
+                <tr>
+                    <th scope="col">OrderId
+                    <th scope="col">OrderBy</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">Order Status</th>
+                    <th scope="col"> Customer Email </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each processedOrders}}
+                <tr>
+                    <th scope="row">#ord{{id}}</th>
+                    <td>{{name}}</td>
+                    <td>{{order_date}}</td>
+                    <td>{{status}}</td>
+                    <td>{{email}}</td>
+                </tr>
+                {{/each}}
+
+            </tbody>
+        </table>
+        {{else}}
+        <div class="alert alert-danger" role="alert">
+            No processed orders found
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+{{> dashboard_footer}}

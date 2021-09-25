@@ -1,0 +1,14 @@
+{{> dashboard_nav}}
+<div class="card">
+    <div class="card-header">
+        Process order #ord{{orderId}}
+    </div>
+    <div class="card-body">
+        <p>Click submit to change the status of order from pending to processed.</p>
+        <form method="post" action="/dashboard/processOrder">
+            <input type="hidden" name="orderId" value="{{orderId}}">
+            <input type="submit" value="submit" class="btn btn-danger btn-sm">
+        </form>
+    </div>
+</div>
+{{> dashboard_footer}}

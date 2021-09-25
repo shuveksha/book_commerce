@@ -1,0 +1,28 @@
+{{> header}}
+<div class="container">
+    <div class="row mt-5">
+        {{#if books}}
+        {{#each books}}
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="{{thumbnail}}" class="card-img-top" alt="...">
+                <div class="card-body">
+
+                    <h5 class="fs-5">{{title}}</h5>
+                    <a href="/book/{{id}}/{{title}}" class="btn btn-sm btn-dark ">Browse</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{else}}
+        <div class="alert alert-danger" role="alert">
+            No result found for search query {{searchQuery}}
+        </div>
+        {{/if}}
+    </div>
+
+
+
+
+
+    {{> footer}}

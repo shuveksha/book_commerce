@@ -20,12 +20,12 @@
 
 
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">BookCommerce</a>
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">SIKSHALAYA</a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
         data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+    {{!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> --}}
     <div class="navbar-nav">
         <div class="nav-item text-nowrap">
             <form method="POST" , action="/logout">
@@ -70,6 +70,25 @@
                     </li>
                     {{/if}}
 
+                    {{# if session.user.isAdmin}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard/customer/pendingOrders">
+                            <span data-feather="users"></span>
+                            Pending Orders
+                        </a>
+                    </li>
+                    {{/if}}
+
+
+                    {{# if session.user.isAdmin}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard/customer/processedOrders">
+                            <span data-feather="users"></span>
+                            Processed Orders
+                        </a>
+                    </li>
+                    {{/if}}
+
 
                     {{#if session.user.isAdmin}}
                     <li class="nav-item">
@@ -80,6 +99,7 @@
                     </li>
                     {{/if}}
 
+                    {{#unless session.user.isAdmin}}
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard/cart/checkout" <span data-feather="bar-chart-2"></span>
                             MyCart
@@ -91,6 +111,7 @@
                             My orders
                         </a>
                     </li>
+                    {{/unless}}
                 </ul>
 
             </div>
@@ -101,20 +122,11 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Welcome {{user.name}}</h1>
+                <h1 class="h2">Welcome {{session.user.name}}</h1>
                 {{#if message}}
                 <div class="alert alert-primary" role="alert">
                     {{message}}
                 </div>
                 {{/if}}
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <div class="btn-group me-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                        <span data-feather="calendar"></span>
-                        This week
-                    </button>
-                </div>
+
             </div>
