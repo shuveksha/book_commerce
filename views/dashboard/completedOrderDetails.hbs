@@ -1,6 +1,4 @@
 {{> dashboard_nav}}
-
-
 <div class="row">
     <div class="col-md-6 col-sm-12">
         <!-- Invoice detail -->
@@ -8,8 +6,9 @@
             <h5 class="card-header">Order Details</h5>
             <div class="card-body">
 
-                <p><b>Order No / Invoice No:</b> #ord{{order.id}}</p>
-                <p><b>Order Date: &nbsp;</b>{{order.order_date}}</p>
+                <p class="text-capitalize"><b>Order No / Invoice No:</b> #ord{{order.id}}</p>
+                <p class="text-capitalize"><b>Order Date: &nbsp;</b>{{order.order_date}}</p>
+                <p class="text-capitalize"><b>Status: &nbsp;</b>{{order.status}}</p>
 
                 <hr>
                 <h5 class="fs-5">Ordered Items</h5>
@@ -66,16 +65,4 @@
     </div>
 </div>
 
-<div class="card mt-3">
-    <div class="card-header">
-        Process order #ord{{orderId}}
-    </div>
-    <div class="card-body">
-        <p>Click completed to change the status of order from pending to processed.</p>
-        <form method="post" action="/dashboard/processOrder">
-            <input type="hidden" name="orderId" value="{{orderId}}">
-            <input type="submit" value="Completed" class="btn btn-danger btn-sm">
-        </form>
-    </div>
-</div>
 {{> dashboard_footer}}
