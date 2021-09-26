@@ -41,7 +41,7 @@ Handlebars.registerHelper('eq', function (arg1, arg2) {
 app.set('view engine', 'hbs');
 
 // Set static dir to serve css and js
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Parse json or urlencoded form
 app.use(express.urlencoded({ extended: true }));
@@ -261,9 +261,11 @@ app.get('/login', (req, res) => {
 
 app.post('/logout', (req, res, next) => {
     // destroy the session
+    req.session.user = null;
+    req.session.userId = null;
     if (req.body.logout) {
         req.session.user = null;
-        res.redirect('/authentication');
+        return res.redirect('/authentication');
     }
 })
 
@@ -344,7 +346,7 @@ app.post('/register', (req, res, next) => {
 app.get('/dashboard', (req, res) => {
     // If user not logged in redirect to login page
     if (!req.session.userId) {
-        res.redirect('/authentication');
+        return res.redirect('/authentication');
     } else if (req.session.userId) {
         if (req.session.user) {
 
@@ -413,15 +415,47 @@ app.get('/dashboard/books', function (req, res) {
 // book add get form 
 app.get('/dashboard/book/add', function (req, res) {
     if (!req.session.userId) {
-        res.redirect('/authentication');
+        return res.redirect('/authentication');
     }
-    res.render('dashboard/book_add');
+
+    if (!req.session.user.isAdmin) {
+        return res.send("Only Admin is allowed to add books");
+    }
+
+    // query genre and publisher. 
+    con.query("select * from genre", function (err, genres) {
+        if (!err) {
+            console.log(genres);
+        } else {
+            genre = [];
+        }
+
+        // query publisher. 
+        con.query("select * from publisher", function (err, publishers) {
+            if (!err) {
+
+            } else {
+                publishers = [];
+            }
+
+            if (genres.length > 0 && publishers.length > 0) {
+                return res.render('dashboard/book_add', {
+                    genres: genres,
+                    publishers: publishers
+                });
+            } else {
+                return res.send("Error on fetching genres and publishers");
+            }
+        });
+
+    });
+
 });
 
 // book add post form
 app.post('/dashboard/book/add', function (req, res) {
     if (!req.session.userId) {
-        res.redirect('/authentication');
+        return res.redirect('/authentication');
     } else {
         let form = formidable.IncomingForm();
         form.keepExtensions = true;
@@ -429,7 +463,7 @@ app.post('/dashboard/book/add', function (req, res) {
         // Form parsing
         form.parse(req, (err, fields, files) => {
             if (err) {
-                res.send("Error in parsing form");
+                return res.send("Error in parsing form");
             }
 
             let title = fields['title'] || "";
@@ -439,39 +473,59 @@ app.post('/dashboard/book/add', function (req, res) {
             let genre_id = fields["genre"] || "";
             let language_id = 1;
             let edition = fields["edition"] || "";
-            let isbn = fields["isbn"] || "";
+            let isbno = fields["isbn"] || "";
             let pages = fields["pages"] || "";
             let publisher_id = fields["publisher"] || "";
 
             // files 
             let thumbnail_path = files.thumbnail.path;
-            let thumbnail_db_path = path.join(__dirname, "public", "files", files.thumbnail.name);
+            let thumbnail_db_path = path.join(__dirname, "public", "media", "thumbnail", files.thumbnail.name);
+
             let url_path = files.url.path;
-            let url_db_path = path.join(__dirname, "public", "files", files.url.name);
+            let url_db_path = path.join(__dirname, "public", "media", "files", files.url.name);
 
 
-            let thumbnail = thumbnail_db_path;
-            let url = url_db_path;
+            // server side validation. 
+            if (!title && !description && !price && !author_id && !genre_id && !language_id && !edition && !isbn && !pages && !publisher_id && !thumbnail_path && !url_path) {
+                return res.send("Please fill up the book add form correctly.");
+            }
 
             // rename thumbnailPath
             fs.rename(thumbnail_path, thumbnail_db_path, function (err) {
                 if (err) {
-
-                    res.send("File uploading error thumbnail");
-                    return;
+                    console.log(err);
+                    return res.send("File uploading error thumbnail");
                 }
+
+
+
+
 
             });
 
             fs.rename(url_path, url_db_path, function (err) {
                 if (err) {
-                    res.send("File uploading error doc");
-                    return;
+                    return res.send("File uploading error doc");
+
                 }
+
 
             });
 
             // Insert into db by validating data.
+            console.log(thumbnail_db_path, url_db_path);
+            thumbnail_db_path = path.join('/public', "media", "thumbnail", files.thumbnail.name).replace(/\\/g, '/');
+            url_db_path = path.join('/public', "media", "thumbnail", files.url.name).replace(/\\/g, '/');
+            tdb = path.join('/public', 'media', 'thumbnail', files.thumbnail.name);
+            udb = path.join('/public', 'media', 'files', files.url.name);
+
+            // thumbnail  db path
+            tdb = tdb.replace(/\\/g, '/')
+            // file db path
+
+            udb = udb.replace(/\\/g, '/');
+
+            console.log(tdb, udb);
 
             let columns = [
                 title,
@@ -481,19 +535,18 @@ app.post('/dashboard/book/add', function (req, res) {
                 genre_id,
                 language_id,
                 edition,
-                isbn,
+                isbno,
                 pages,
                 publisher_id,
-                thumbnail,
-                url
+                tdb,
+                udb,
             ]
 
-            let insertBookSql = "insert into book( title, description, price, author_id, genre_id, language_id, edition, isbn,pages,publisher_id, thumbnail,url) values ?";
+            let insertBookSql = "insert into book( title, description, price, author_id, genre_id, language_id, edition, isbno,pages,publisher_id, thumbnail,url) values (?)     ";
 
             con.query(insertBookSql, [columns], function (err, result) {
                 if (!err) {
-                    res.send("Book Added successfully");
-                    return;
+                    return res.send("Book Added successfully");
                 } else {
                     console.log(err);
                 }
@@ -505,7 +558,6 @@ app.post('/dashboard/book/add', function (req, res) {
                     message: "There was an error parsing the files",
                     error: err,
                 });
-                return;
             }
         });
     }
@@ -1050,7 +1102,12 @@ app.post('/dashboard/cart/checkout/order', function (req, res) {
 // add to cart  get
 app.get('/cart/add/:productId/', function (req, res) {
     if (!req.session.userId) {
-        res.redirect('/authentication');
+        return res.redirect('/authentication');
+    }
+    console.log("user is", req.session.user, "and id is", req.session.userId);
+    if (req.session.user.isAdmin) {
+        // Admin not allowed to add to cart. 
+        res.send("Admin is not allowed for shopping, logged in as a normal user");
     }
 
 
@@ -1135,11 +1192,15 @@ app.get('/dashboard/customer/processedOrders', function (req, res) {
     });
 });
 
+
 app.get('/dashboard/processOrder/:orderId', function (req, res) {
 
     if (!req.session.userId) {
         res.redirect('/authentication');
+        return;
     }
+
+    console.log(req.session.user);
 
     if (!req.session.user.isAdmin) {
         res.send("You are not authorized to process the order");
@@ -1153,13 +1214,171 @@ app.get('/dashboard/processOrder/:orderId', function (req, res) {
         return;
     }
 
-    res.render("dashboard/customerProcessOrder", {
-        orderId: orderId
+    // query order details. 
+    con.query("select user_order.*, shipping_address.* from user_order inner join shipping_address on user_order.shipping_address_id=shipping_address.id where user_order.id=?", [orderId], function (err, orderDetail) {
+        if (err) {
+            res.send("Error on fetching order");
+            return;
+        }
+
+        // query shipping details. 
+        let sqlShippingDetail = "select * from shipping_address where id=?";
+
+        if (orderDetail.length > 0) {
+
+            con.query(sqlShippingDetail, orderDetail[0].shipping_address_id, function (err, shippingAddress) {
+                if (err) {
+                    res.send("Error on fetching shipping details.");
+                    return;
+                }
+
+                if (shippingAddress.length <= 0) {
+                    res.send("No shipping details found");
+                    return;
+                }
+
+
+                // fetch order details having order.id  
+                let sqlOrderItemDetail = "select book.title, ordered_price, ordered_quantity, (ordered_quantity * ordered_price) as subtotal from ordered_items inner join user_order on ordered_items.user_order_id=user_order.id inner join book on ordered_items.product_id=book.id where  user_order.id =?";
+                con.query(sqlOrderItemDetail, [orderId], function (err, order_items) {
+                    if (!err) {
+
+
+                        if (order_items.length <= 0) {
+                            res.send(`No items found in order ${orderId}`);
+                            return;
+                        }
+
+                        // calculate total quantity and total price
+                        let totalPrice = 0;
+                        order_items.forEach(item => {
+                            totalPrice += item.subtotal;
+
+                        });
+
+
+
+                        res.render("dashboard/customerProcessOrder", {
+                            order: orderDetail[0] || "",
+                            orderId: orderId,
+                            items: order_items || "",
+                            shippingAddress: shippingAddress[0] || "",
+                            totalPrice: totalPrice
+
+                        });
+                    }
+                    if (err) {
+                        res.send(`Error on fetching order items  having order id ${orderId}`);
+                        return;
+
+                    }
+                });
+            });
+
+        } else {
+            res.send("Error on fetching order detail");
+            return;
+        }
+
     });
 
 
 
 });
+
+app.get('/dashboard/customer/completedOrderDetails/:orderId', function (req, res) {
+
+    if (!req.session.userId) {
+        res.redirect('/authentication');
+        return;
+    }
+
+    console.log(req.session.user);
+
+    if (!req.session.user.isAdmin) {
+        res.send("You are not authorized to process the order");
+        return;
+    }
+
+    let orderId = req.params.orderId || "";
+
+    if (!orderId) {
+        res.send("Invalid order id");
+        return;
+    }
+
+    // query order details. 
+    con.query("select user_order.*, shipping_address.* from user_order inner join shipping_address on user_order.shipping_address_id=shipping_address.id where user_order.id=?", [orderId], function (err, orderDetail) {
+        if (err) {
+            res.send("Error on fetching order");
+            return;
+        }
+
+        // query shipping details. 
+        let sqlShippingDetail = "select * from shipping_address where id=?";
+
+        if (orderDetail.length > 0) {
+
+            con.query(sqlShippingDetail, orderDetail[0].shipping_address_id, function (err, shippingAddress) {
+                if (err) {
+                    res.send("Error on fetching shipping details.");
+                    return;
+                }
+
+                if (shippingAddress.length <= 0) {
+                    res.send("No shipping details found");
+                    return;
+                }
+
+
+                // fetch order details having order.id  
+                let sqlOrderItemDetail = "select book.title, ordered_price, ordered_quantity, (ordered_quantity * ordered_price) as subtotal from ordered_items inner join user_order on ordered_items.user_order_id=user_order.id inner join book on ordered_items.product_id=book.id where  user_order.id =?";
+                con.query(sqlOrderItemDetail, [orderId], function (err, order_items) {
+                    if (!err) {
+
+
+                        if (order_items.length <= 0) {
+                            res.send(`No items found in order ${orderId}`);
+                            return;
+                        }
+
+                        // calculate total quantity and total price
+                        let totalPrice = 0;
+                        order_items.forEach(item => {
+                            totalPrice += item.subtotal;
+
+                        });
+
+
+
+                        res.render("dashboard/completedOrderDetails", {
+                            order: orderDetail[0] || "",
+                            orderId: orderId,
+                            items: order_items || "",
+                            shippingAddress: shippingAddress[0] || "",
+                            totalPrice: totalPrice
+
+                        });
+                    }
+                    if (err) {
+                        res.send(`Error on fetching order items  having order id ${orderId}`);
+                        return;
+
+                    }
+                });
+            });
+
+        } else {
+            res.send("Error on fetching order detail");
+            return;
+        }
+
+    });
+
+
+
+});
+
 
 
 app.post('/dashboard/processOrder', function (req, res) {

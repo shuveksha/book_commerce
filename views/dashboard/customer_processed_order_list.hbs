@@ -13,6 +13,7 @@
                     <th scope="col">Order Date</th>
                     <th scope="col">Order Status</th>
                     <th scope="col"> Customer Email </th>
+                    <th scope="col"> OrderDetail </th>
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +24,7 @@
                     <td>{{order_date}}</td>
                     <td>{{status}}</td>
                     <td>{{email}}</td>
+                    <td><a href="/dashboard/customer/completedOrderDetails/{{id}}">OrderDetail</a> </td>
                 </tr>
                 {{/each}}
 
